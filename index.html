@@ -1,0 +1,4147 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.6">
+    <title>Hızlı İşlemler</title>
+
+    <style>
+
+/* YENİ CEZA SEÇİM BUTONLARI (SOL MENÜ STİLİNDE) */
+        .ceza-secim-konteyner {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            max-width: 450px;
+        }
+
+        .ceza-secim-kutu {
+            width: 100%;
+            height: 52px;
+            background-color: #1d3898;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0px;
+            transition: background-color 0.15s ease;
+        }
+
+        .ceza-secim-kutu:hover {
+            background-color: #2445b3;
+        }
+
+        .ceza-secim-ikon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .ceza-secim-baslik {
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* =========================================
+           EGM TABLET ANA UYGULAMA LİSTE MENÜSÜ (UTP / MENÜ EKRANI)
+           ========================================= */
+        .tablet-menu-ekran {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #f1f1f1;
+            z-index: 888888;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .menu-icerik-govde {
+            padding: 24px;
+            max-width: 1180px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .egm-liste-karti {
+            width: 100%;
+            height: 65px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.15s ease;
+        }
+
+        .egm-liste-karti:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .egm-liste-karti.cizgi-mavi { border-left: 8px solid #1d3898; }
+        .egm-liste-karti.cizgi-yesil { border-left: 8px solid #65a30d; }
+        .egm-liste-karti.cizgi-sari { border-left: 8px solid #ca8a04; }
+        .egm-liste-karti.cizgi-mor { border-left: 8px solid #7c3aed; }
+
+        /* =========================================
+           ÖZEL GÜVENLİK BİLGİ SİSTEMİ GİRİŞ EKRANI
+           ========================================= */
+        .giris-arkaplan {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #0B2545 0%, #030C1A 100%);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .giris-kutu-portal {
+            width: 440px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .giris-logo-alan {
+            width: 205px;
+            height: 205px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .giris-portal-baslik {
+            font-size: 14px;
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .portal-form-grup {
+            width: 100%;
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .portal-form-grup label {
+            font-size: 12px;
+            color: #0284c7;
+            font-weight: 600;
+        }
+
+        .portal-input {
+            width: 100%;
+            height: 38px;
+            padding: 0 10px;
+            font-size: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 3px;
+            outline: none;
+            background: #fff;
+            color: #111;
+        }
+
+        .portal-sifre-satiri {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11.5px;
+            margin: 6px 0 16px 0;
+            color: #0284c7;
+        }
+
+        .portal-sifre-satiri label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #334155;
+        }
+
+        .portal-sifre-satiri a {
+            color: #0284c7;
+            text-decoration: none;
+        }
+
+        .portal-logon-btn {
+            width: 100%;
+            height: 40px;
+            background-color: #0d9488;
+            color: white;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-top: 4px;
+        }
+
+        .portal-alt-bilgi {
+            font-size: 11px;
+            color: #64748b;
+            text-align: center;
+            margin-top: 18px;
+            line-height: 1.4;
+        }
+
+        .portal-telif {
+            font-size: 10.5px;
+            color: #94a3b8;
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.3;
+        }
+
+        .portal-hata {
+            color: #c00000;
+            font-size: 11.5px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 8px;
+            min-height: 15px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #e2e2e2;
+            color: #111;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* =========================================
+           AÇIK MAVİ ANDROID TABLET DURUM ÇUBUĞU
+           ========================================= */
+        .android-bar {
+            width: 100%;
+            height: 30px;
+            background-color: #909090;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            position: relative;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .saat {
+            position: absolute;
+            left: 12px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .tarih {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            letter-spacing: 0.3px;
+        }
+
+        .durum {
+            position: absolute;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 12px;
+        }
+
+        .batarya {
+            border: 1px solid #ffffff;
+            padding: 2px 5px;
+            font-size: 10px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+
+        /* =========================================
+           AŞAĞI DOĞRU GENİŞLETİLMİŞ MAVİ ÜST BAR
+           ========================================= */
+        .ust-bar {
+            width: 100%;
+            height: 76px;
+            background-color: #0f225e;
+            border-bottom: 2px solid #b8c3d9;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .amblem {
+            width: 50px;
+            height: 50px;
+            background-color: transparent; /* Arka planı şeffaf yaptık */
+            border: none;                  /* Etrafındaki halkayı/çerçeveyi kaldırdık */
+            border-radius: 0;              /* Daire olma özelliğini kaldırdık */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 14px;
+            box-shadow: none;              /* Varsa gölgeyi kaldırdık */
+        }
+
+        .amblem img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .baslik {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 29px;
+            font-weight: bold;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        .ev {
+            position: absolute;
+            right: 18px;
+            font-size: 32px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* =========================================
+           ANA ALAN & YERLEŞİM
+           ========================================= */
+        .ana-alan {
+            padding: 13px 14px;
+            height: calc(100vh - 106px);
+        }
+
+        .ana-baslik {
+            font-size: 31px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .govde-yerlesim {
+            display: flex;
+            gap: 36px;
+            align-items: flex-start;
+        }
+
+        /* =========================================
+           BUTONLAR
+           ========================================= */
+        .butonlar {
+            width: 229px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .buton {
+            width: 229px;
+            height: 52px;
+            border: none;
+            background-color: #0f225e;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: outline 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .buton:hover {
+            background-color: #173280;
+        }
+
+        .kirmizi {
+    background-color: #e00000;
+    height: 90px; /* Buraya istediğin yüksekliği verebilirsin (Örn: 80px, 100px vb.) */
+}
+
+        .kirmizi:hover {
+            background-color: #f00000;
+        }
+
+        .gri {
+    background-color: #a0a0a0;
+    height: 90px; /* Buraya istediğin yüksekliği verebilirsin (Örn: 80px, 100px vb.) */
+}
+
+
+        .gri:hover {
+            background-color: #a0a0a0;
+        }
+
+        .buton.secili {
+            outline: 3px solid #ffffff;
+            outline-offset: -3px;
+            box-shadow: 0 0 0 2px #111111;
+        }
+
+        /* =========================================
+           GRİ ÇERÇEVE ALANI
+           ========================================= */
+        .gri-cerceve {
+flex: 1;
+            width: 82%;
+            max-width: 1180px;
+            height: calc(100vh - 90px);
+            background-color: #ffffff;
+            padding: 24px;
+            color: #fffff;
+            border-radius: 0px;
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+margin-top: -45px;
+        }
+
+        .ekran-baslik {
+            font-size: 20px;
+            font-weight: bold;
+            border-bottom: 2px solid #8e8e8e;
+            padding-bottom: 8px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+        }
+
+        .form-satir {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .gri-input {
+            flex: 1;
+            max-width: 550px;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #333;
+            background: #ffffff;
+            color: #111;
+        }
+
+        .gri-btn {
+            padding: 10px 22px;
+            font-weight: bold;
+            background-color: #1d3898;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+        .gri-btn:hover {
+            background-color: #2445b3;
+        }
+
+        .sonuc-kutusu {
+            background: #ffffff;
+            color: #111;
+            padding: 16px;
+            border-radius: 2px;
+            max-width: 720px;
+            line-height: 1.6;
+            font-size: 14px;
+            margin-top: 14px;
+        }
+
+        /* =========================================
+           KURUMSAL KART VE MODÜL STILLERI
+           ========================================= */
+        .kurumsal-kart {
+            background: #ffffff;
+            color: #111;
+            border-radius: 4px;
+            border-top: 5px solid #1d3898;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+            padding: 18px;
+            font-size: 13px;
+        }
+
+        .kart-ust-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+        }
+
+        .tablo-kurumsal {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+            margin-bottom: 12px;
+        }
+
+        .tablo-kurumsal th {
+            background: #1d3898;
+            color: #ffffff;
+            padding: 8px 10px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .tablo-kurumsal td {
+            padding: 7px 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .tablo-kurumsal tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        /* AYARLAR MODÜLÜ */
+        .ayar-bolum-baslik {
+            font-size: 13px;
+            font-weight: 800;
+            color: #1d3898;
+            border-bottom: 1.5px solid #1d3898;
+            padding-bottom: 4px;
+            margin: 14px 0 10px 0;
+            text-transform: uppercase;
+        }
+
+        .ayar-satiri {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .ayar-bilgi {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .ayar-ad {
+            font-size: 13px;
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .ayar-aciklama {
+            font-size: 11.5px;
+            color: #64748b;
+        }
+
+        .ayar-kontrol select, .ayar-kontrol input[type="range"] {
+            padding: 6px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 3px;
+            font-size: 12.5px;
+            outline: none;
+        }
+
+        /* BİLDİRİMLER MODÜLÜ */
+        .bildirim-ogesi {
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid #1d3898;
+            border-radius: 3px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            background: #fcfcfc;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .bildirim-ogesi.acil {
+            border-left-color: #c00000;
+            background: #fff8f8;
+        }
+
+        .bildirim-ogesi.uyari {
+            border-left-color: #d97706;
+            background: #fffbf0;
+        }
+
+        .bildirim-ust {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bildirim-baslik {
+            font-size: 13.5px;
+            font-weight: bold;
+            color: #111;
+        }
+
+        .bildirim-zaman {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #64748b;
+            font-family: monospace;
+        }
+
+        .bildirim-metin {
+            font-size: 12.5px;
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        /* =========================================
+           VATANDAŞ KİMLİK / BİYOMETRİK DETAY KARTI
+           ========================================= */
+        .vatandas-karti {
+            background: #ffffff;
+            color: #111;
+            border-radius: 4px;
+            border-top: 5px solid #1d3898;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+            margin-top: 15px;
+            padding: 18px;
+            font-size: 13px;
+        }
+
+        .vatandas-ust-baslik {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+        }
+
+        .vatandas-govde {
+            display: flex;
+            gap: 20px;
+        }
+
+        .biyometrik-profil-kutusu {
+            width: 175px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            border-right: 1px solid #e8e8e8;
+            padding-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .vesikalik-cerceve {
+            width: 125px;
+            height: 150px;
+            background: #eef2f7;
+            border: 2px solid #1d3898;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+        }
+
+        .vesikalik-foto {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .vesikalik-siluet {
+            font-size: 72px;
+            line-height: 1;
+            color: #7a8aa3;
+        }
+
+        .yuz-tarama-cizgisi {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 200, 80, 0.75);
+            top: 40%;
+            box-shadow: 0 0 6px rgba(0,255,0,0.9);
+        }
+
+        .parmak-izi-paneli {
+            width: 100%;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .parmak-izi-ikon {
+            font-size: 26px;
+            color: #1d3898;
+            line-height: 1;
+            margin-bottom: 3px;
+        }
+
+        .vatandas-tablolar {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .alt-bolum-baslik {
+            font-size: 12px;
+            font-weight: 800;
+            color: #1d3898;
+            letter-spacing: 0.5px;
+            border-bottom: 1.5px solid #1d3898;
+            padding-bottom: 3px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .bilgi-grid {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+        }
+
+        .bilgi-grid td {
+            padding: 5px 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .bilgi-grid td.etiket {
+            font-weight: bold;
+            color: #555;
+            width: 22%;
+            background-color: #fafafa;
+        }
+
+        .bilgi-grid td.deger {
+            color: #111;
+            font-weight: 600;
+        }
+
+        .uavt-adres-kutusu {
+            background: #fcfcfc;
+            border: 1px dashed #bbb;
+            padding: 8px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #222;
+        }
+
+        .adli-tahkikat-kutusu {
+            background: #fff8f8;
+            border-left: 4px solid #c00000;
+            padding: 8px 12px;
+            font-size: 12.5px;
+            color: #900000;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .adli-temiz-kutusu {
+            background: #f4fbf4;
+            border-left: 4px solid #138808;
+            padding: 8px 12px;
+            font-size: 12.5px;
+            color: #0d5f05;
+            font-weight: bold;
+        }
+
+        .rozet-yesil {
+            background-color: #138808;
+            color: white;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 11px;
+        }
+
+        .rozet-kirmizi {
+            background-color: #c00000;
+            color: white;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 11px;
+        }
+
+        .rozet-mavi {
+            background-color: #1d3898;
+            color: white;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 11px;
+        }
+
+        .rozet-sari {
+            background-color: #d97706;
+            color: white;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 11.5px;
+        }
+
+        /* =========================================
+           ARAÇ RUHSAT KARTI VE TABLOSU
+           ========================================= */
+        .arac-karti {
+            background: #ffffff;
+            color: #111;
+            border-radius: 4px;
+            border-top: 5px solid #1d3898;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+            margin-top: 15px;
+            padding: 18px;
+            font-size: 13px;
+        }
+
+        .arac-karti-ust {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+        }
+
+        .arac-bilgi-tablosu {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+        }
+
+        .arac-bilgi-tablosu td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .arac-bilgi-tablosu td.alan-adi {
+            font-weight: bold;
+            color: #444;
+            width: 25%;
+            background-color: #f9f9f9;
+        }
+
+        .arac-aksiyon-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            border-top: 1px solid #ddd;
+            padding-top: 12px;
+        }
+
+        .aksiyon-btn {
+            border: none;
+            padding: 8px 16px;
+            font-size: 12.5px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 2px;
+            color: white;
+        }
+
+        /* =========================================
+           DİNAMİK GERÇEKÇİ AVRUPA PLAKA KUTUSU
+           ========================================= */
+        .sorgu-filtre-satiri {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: flex-end;
+            margin-bottom: 12px;
+        }
+
+        .sorgu-alan-kolonu {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .sorgu-etiket {
+            font-size: 12px;
+            font-weight: bold;
+            color: #000000;
+            letter-spacing: 0.3px;
+        }
+
+        .dinamik-plaka-kapsayici {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border: 2.5px solid #111111;
+            border-radius: 5px;
+            overflow: hidden;
+            width: 360px;
+            height: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .plaka-sol-euroband {
+            position: relative;
+            background-color: #003399;
+            color: #ffd700;
+            width: 65px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            user-select: none;
+            cursor: pointer;
+            border-right: 1px solid rgba(0,0,0,0.15);
+        }
+
+        .euro-yildiz {
+            font-size: 10px;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .euro-kod-metin {
+            font-size: 13px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .ulke-secici-gizli {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .plaka-orta-girdi {
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            height: 100%;
+            padding: 0 10px;
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #111111;
+            background: transparent;
+            text-align: center;
+            font-family: 'Consolas', 'Lucida Console', monospace, sans-serif;
+        }
+
+        .plaka-sag-bolge-bandi {
+            display: none;
+            background-color: #003399;
+            color: #ffffff;
+            width: 44px;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            font-size: 12px;
+            font-weight: bold;
+            border-left: 1px solid rgba(0,0,0,0.15);
+        }
+
+        .sase-input {
+            height: 50px;
+            width: 250px;
+            padding: 0 12px;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: monospace;
+            border: 2px solid #1d3898;
+            border-radius: 4px;
+            text-transform: uppercase;
+            outline: none;
+            color: #111;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* MAVİ CEZA SEÇENEKLERİ BARI (SELECT) */
+        .mavi-select-bar {
+            width: 100%;
+            max-width: 100%;
+            height: 44px;
+            padding: 8px 12px;
+            font-size: 13.5px;
+            font-weight: 600;
+            background-color: #1d3898;
+            color: #ffffff;
+            border: 2px solid #4a76c9;
+            border-radius: 3px;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+        }
+
+        .mavi-select-bar:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 0 2px #4a76c9;
+        }
+
+        .mavi-select-bar optgroup {
+            background-color: #0f2369;
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .mavi-select-bar option {
+            background-color: #ffffff;
+            color: #111111;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px;
+        }
+
+        /* =========================================
+           RESMİ A4 PDF MODAL EKRANI
+           ========================================= */
+        .pdf-modal-arkaplan {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.78);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(2px);
+        }
+
+        .pdf-kapsayici {
+            width: 780px;
+            max-height: 94vh;
+            background: #ffffff;
+            color: #000;
+            border-radius: 4px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .pdf-arac-cubugu {
+            height: 48px;
+            background: #1d3898;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .pdf-arac-cubugu button {
+            background: #ffffff;
+            color: #1d3898;
+            border: none;
+            padding: 6px 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 2px;
+            font-size: 12px;
+        }
+
+        .pdf-govde {
+            padding: 30px 40px;
+            overflow-y: auto;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13.5px;
+            line-height: 1.5;
+            background: #fff;
+        }
+
+        .pdf-antet {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .pdf-antet h3 {
+            font-size: 15px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .pdf-antet h4 {
+            font-size: 13px;
+            margin: 2px 0;
+            font-weight: normal;
+        }
+
+        .pdf-antet h2 {
+            font-size: 16px;
+            margin-top: 6px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .pdf-tablo {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+        }
+
+        .pdf-tablo td,
+        .pdf-tablo th {
+            border: 1px solid #333;
+            padding: 7px 10px;
+            font-size: 13px;
+        }
+
+        .pdf-tablo th {
+            background-color: #f2f2f2;
+            text-align: left;
+            width: 28%;
+        }
+
+        .pdf-alt-bilgi {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-top: 15px;
+        }
+
+        .muhur-alani {
+            width: 125px;
+            height: 125px;
+            border: 2px dashed #b10000;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #b10000;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            transform: rotate(-10deg);
+            opacity: 0.85;
+            line-height: 1.2;
+        }
+
+        .imza-alani {
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .barkod-alani {
+            font-family: monospace;
+            letter-spacing: 4px;
+            font-size: 18px;
+            font-weight: bold;
+            background: #eee;
+            padding: 4px 10px;
+            display: inline-block;
+            border: 1px solid #999;
+        }
+
+        /* =========================================
+           SAHTE WINDOWS GÖREV ÇUBUĞU (TASKBAR)
+           ========================================= */
+        .windows-taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            height: 40px;
+            background-color: rgba(30, 30, 30, 0.92);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            z-index: 9999999;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            color: #ffffff;
+            user-select: none;
+        }
+
+        .taskbar-sol {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 100%;
+        }
+
+        .win-baslat-dugme {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .win-baslat-dugme:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .acik-uygulama-sekmesi {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            border-bottom: 3px solid #3b82f6;
+            padding: 0 12px;
+            height: 36px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12.5px;
+            font-weight: 500;
+            transition: background 0.15s;
+        }
+        .acik-uygulama-sekmesi:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .taskbar-sag {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 12px;
+            color: #e2e8f0;
+            height: 100%;
+            padding-right: 4px;
+        }
+    </style>
+</head>
+
+<!-- SAHTE WINDOWS GÖREV ÇUBUĞU (TASKBAR) -->
+    <div class="windows-taskbar">
+        <div class="taskbar-sol">
+            <div class="win-baslat-dugme" title="Başlat" onclick="alert('Windows Başlat Menüsü')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#60cdff"><path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.55L24 0v11.55h-13.051V1.899zM0 13.05h9.75v9.45L0 21.15v-8.1zm10.949 0H24V24l-13.051-1.899v-9.051z"/></svg>
+            </div>
+
+            <div class="acik-uygulama-sekmesi" onclick="alert('Pol-Net Mobil Terminal aktif ve odaklanmış durumda.')">
+                <svg width="18" height="18" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="46" fill="#1d3898" stroke="#ffd700" stroke-width="6"/>
+                    <circle cx="50" cy="52" r="22" fill="#fff"/>
+                    <polygon points="50,34 54,44 65,44 56,51 59,61 50,55 41,61 44,51 35,44 46,44" fill="#c00000"/>
+                </svg>
+                <span>Mobil Terminal</span>
+            </div>
+        </div>
+
+        <div class="taskbar-sag">
+            <span>TÜRKİYE İÇİŞLERİ BAKANLIĞI PERSONEL TABLETİ / AKTİF SİCİL 652876</span>
+            <span id="taskbar-saat">14:32</span>
+        </div>
+    </div>
+
+    <script>
+
+        // Taskbar saatinin çalışması için eklenen küçük fonksiyon
+        function taskbarSaatiniGuncelle() {
+            const simdi = new Date();
+            const saat = String(simdi.getHours()).padStart(2, '0');
+            const dakika = String(simdi.getMinutes()).padStart(2, '0');
+            const saatEl = document.getElementById('taskbar-saat');
+            if(saatEl) saatEl.innerText = `${saat}:${dakika}`;
+        }
+        setInterval(taskbarSaatiniGuncelle, 1000);
+        taskbarSaatiniGuncelle();
+    </script>
+<body>
+
+    <div class="android-bar">
+        <div class="saat" id="saat-kutusu">14:32</div>
+        <div class="tarih">Çarşamba, 2 Eylül</div>
+        <div class="durum">
+            <span>▴</span>
+            <span>⌁</span>
+            <span>▮</span>
+            <div class="batarya">44%</div>
+        </div>
+    </div>
+
+    <div class="ust-bar">
+        <div class="amblem">
+            <img src="solustlogo.png"" alt="EGM Amblemi" style="width:100%; height:100%; object-fit:contain;">
+        </div>
+        <div class="ev" onclick="varsayilanaDon()">🏠</div>    
+    </div>
+
+    <div class="ana-alan">
+        <div class="ana-baslik"></div>
+
+        <div class="govde-yerlesim">
+            <div class="butonlar">
+                <button class="buton" id="btn-vatandas" onclick="panelGoster('vatandas', this)">VATANDAŞ İŞLEMLERİ</button>
+                <button class="buton" id="btn-arac" onclick="aracSorgulamaPaneliYukle(this)">ARAÇ SORGULAMA</button>
+<!-- DİĞER BUTONLARLA AYNI BOYUT VE YAPIDA BEYAZ ARAMA KUTUSU -->
+<div style="width: 229px; height: 52px; background-color: #ffffff; border: 2px solid #1d3898; display: flex; align-items: center; justify-content: center; margin: 2.5px 0; border-radius: 0px; box-sizing: border-box; padding: 0 10px;">
+    <input type="text" id="akilli-input" placeholder="" style="width: 100%; border: none; outline: none; background: transparent; font-size: 14px; font-weight: bold; text-align: center; text-transform: uppercase; color: #111;" autocomplete="off" oninput="akilliSorgula(this.value)">
+</div>
+                <button class="buton kirmizi" id="btn-ceza" onclick="panelGoster('ceza', this)">CEZA OLUŞTUR</button>
+                <button class="buton gri" id="btn-tutanak" onclick="panelGoster('tutanak', this)">TUTANAKLAR</button>
+                <button class="buton" onclick="metinGoster('ARAÇ FOTOĞRAFLARI', 'Kamera kayıt sunucusunda aktif dosya bulunamadı.', this)">ARAÇ FOTOĞRAFLARI</button>
+                <button class="buton" onclick="metinGoster('RAPORLAR', 'Günlük devriye kayıtları arşivlendi.', this)">RAPORLAR</button>
+                <button class="buton" onclick="metinGoster('PDF OLUŞTUR', 'Hazırlanan form PDF baskısına aktarılmaya hazır.', this)">PDF OLUŞTUR</button>
+                                <button class="buton" id="btn-ayar" onclick="panelGoster('ayarlar', this)">AYARLAR</button>
+
+            </div>
+
+            <div class="gri-cerceve" id="gri-alan">
+                <div class="ekran-baslik" id="ekran-baslik">SİSTEM HAZIR</div>
+                <div id="ekran-icerik">
+                    <p style="color: #ddd;">İşlem yapmak için soldaki menüden seçim yapınız.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pdf-modal-arkaplan" id="pdfModal">
+        <div class="pdf-kapsayici">
+            <div class="pdf-arac-cubugu">
+                <span>E-TUTANAK BELGE ÖNİZLEME (A4 FORMATI)</span>
+                <div style="display:flex; gap:8px;">
+                    <button onclick="window.print()">YAZDIR / PDF KAYDET</button>
+                    <button style="background:#e00000; color:#fff;" onclick="pdfKapat()">KAPAT</button>
+                </div>
+            </div>
+            <div class="pdf-govde" id="pdfIcerikYazdir"></div>
+        </div>
+    </div>
+
+    <script>
+
+function aracSorgulamaPaneliYukle(butonEl) {
+            if (butonEl) butonSeciminiGuncelle(butonEl);
+            const baslik = document.getElementById('ekran-baslik');
+            const icerik = document.getElementById('ekran-icerik');
+            if (baslik) baslik.innerText = "ARAÇ SORGULAMA İŞLEMİ";
+
+            if (icerik) {
+                icerik.innerHTML = `
+                    <div style="display: flex; flex-direction: column; gap: 12px; max-width: 650px;">
+                        <div style="font-size: 14px; font-weight: bold; color: #111; margin-bottom: 2px;">Sorgulama Yöntemi Seçiniz:</div>
+                        
+                        <!-- ÜSTTE YAN YANA DURAN 2 BUTON -->
+                        <div style="display: flex; gap: 12px;">
+                            <button style="flex: 1; background-color: #0f225e; color: #ffffff; padding: 14px 15px; font-size: 14px; font-weight: bold; border: none; border-radius: 6px; text-align: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onclick="aracAltFormAc('plaka')">
+                                Tescil Plakası ile Sorgulama
+                            </button>
+
+                            <button style="flex: 1; background-color: #0f225e; color: #ffffff; padding: 14px 15px; font-size: 14px; font-weight: bold; border: none; border-radius: 6px; text-align: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onclick="aracAltFormAc('tc')">
+                                T.C. Kimlik Numarası ile Sorgulama
+                            </button>
+                        </div>
+
+                        <!-- ALTTA TEK BAŞINA DURAN 3. BUTON -->
+                        <div>
+                            <button style="width: 100%; background-color: #0f225e; color: #ffffff; padding: 14px 15px; font-size: 14px; font-weight: bold; border: none; border-radius: 6px; text-align: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onclick="aracAltFormAc('karekod')">
+                                Karekod ile Sorgulama
+                            </button>
+                        </div>
+                    </div>
+                    <div id="arac-alt-sonuc" style="margin-top: 20px;"></div>
+                `;
+            }
+        }
+        function aracAltFormAc(tur) {
+            const sonucDiv = document.getElementById('arac-alt-sonuc');
+            if (!sonucDiv) return;
+
+            if (tur === 'plaka') {
+                sonucDiv.innerHTML = `
+                    <div style="background: #fff; padding: 15px; border: 1px solid #ccc; border-radius: 6px; max-width: 650px;">
+                        <strong>Plaka ile Sorgulama:</strong>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <input type="text" id="sorgu-plaka-input" placeholder="Örn: 34ABC123" style="flex: 1; padding: 10px; font-weight: bold; text-transform: uppercase; border: 1px solid #ccc; border-radius: 4px;">
+                            <button style="background: #0f225e; color: #fff; border: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer;" onclick="sorgulaPlakaDisaridan()">Sorgula</button>
+                        </div>
+                    </div>
+                `;
+            } else if (tur === 'tc') {
+                sonucDiv.innerHTML = `
+                    <div style="background: #fff; padding: 15px; border: 1px solid #ccc; border-radius: 6px; max-width: 650px;">
+                        <strong>T.C. Kimlik Numarası ile Sorgulama:</strong>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <input type="text" maxlength="11" id="sorgu-tc-input" placeholder="11 Hane T.C. Kimlik No" style="flex: 1; padding: 10px; font-weight: bold; border: 1px solid #ccc; border-radius: 4px;">
+                            <button style="background: #0f225e; color: #fff; border: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer;" onclick="alert('T.C. ile araç sorgulama başlatıldı.')">Sorgula</button>
+                        </div>
+                    </div>
+                `;
+            } else if (tur === 'karekod') {
+                sonucDiv.innerHTML = `
+                    <div style="background: #111; padding: 20px; border-radius: 8px; max-width: 650px; color: #fff; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                        <div style="font-size: 14px; font-weight: bold; margin-bottom: 12px; color: #38bdf8; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <span>📷</span> İPAD KAMERA VİZÖRÜ - KAREKOD TARAYICI
+                        </div>
+                        
+                        <!-- IPAD KAMERA GÖRÜNTÜ ALANI VE LAZER TARAMA ÇİZGİSİ -->
+                        <div style="position: relative; margin: 0 auto; width: 280px; height: 180px; border: 2px solid #38bdf8; border-radius: 6px; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            <!-- Kamera Arka Plan Simülasyonu / Canlı Tarama Izgarası -->
+                            <div style="position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, rgba(0,0,0,0.8) 100%);"></div>
+                            
+                            <!-- Hareketli Lazer Çizgisi -->
+                            <div style="position: absolute; width: 80%; height: 2px; background: #ef4444; box-shadow: 0 0 8px #ef4444; animation: LazerAnimasyon 1.5s infinite alternate; top: 50%;"></div>
+                            
+                            <span style="position: relative; z-index: 2; font-size: 12px; color: #94a3b8; font-family: monospace;">[ KAREKODU ÇERÇEVEYE HİZALAYIN ]</span>
+                        </div>
+
+                        <div style="margin-top: 14px; font-size: 11.5px; color: #94a3b8;">
+                            Kamera sensörü aktif. Araç ruhsatındaki karekod taranıyor...
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // UTP (Uygulama Takip Projesi) Saha Denetim Paneli
+        function utpPanelineGec() {
+            // Tablet menü ekranını kapatıp ana Pol-Net / Hızlı İşlemler ekranına geçer
+            document.getElementById('tabletMenuEkrani').style.display = 'none';
+            
+            // Başlığı ve alanı UTP Saha Denetim Modülü olarak ayarla
+            document.getElementById('ekran-baslik').innerText = "UTP - SAHA DENETİM VE UYGULAMA TAKİP PROJESİ";
+            
+            document.getElementById('ekran-icerik').innerHTML = `
+                <div class="kurumsal-kart">
+                    <div class="kart-ust-bar">
+                        <div>
+                            <span style="font-size:15px; font-weight:bold; color:#1d3898;">AKTİF İL GENELİ YOL UYGULAMA VE NOKTALARI</span><br>
+                            <span style="font-size:11px; color:#64748b;">SEKTÖR: AVRUPA YAKASI | OPERASYONEL DURUM: KRİTİK DENETİM</span>
+                        </div>
+                        <span class="rozet-yesil">CANLI AKIŞ AKTİF</span>
+                    </div>
+
+                    <table class="tablo-kurumsal">
+                        <thead>
+                            <tr>
+                                <th>Nokta Kodu</th>
+                                <th>Lokasyon / Güzergah</th>
+                                <th>Sorumlu Ekip</th>
+                                <th>Durdurulan / GBT</th>
+                                <th>Durum</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>NKT-3401</strong></td>
+                                <td>Basın Ekspres Yolu Sektör 4 Kontrol Noktası</td>
+                                <td>34-A-14 (Asayiş / Trafik)</td>
+                                <td>42 Araç / 118 Şahıs</td>
+                                <td><span style="color:#138808; font-weight:bold;">Aktif Uygulama</span></td>
+                                <td><button class="gri-btn" style="padding:4px 10px; font-size:11px;" onclick="alert('NKT-3401 kontrol noktasına takviye ekip ve GPS konumu gönderildi.')">DETAY</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>NKT-3402</strong></td>
+                                <td>TEM Otoyolu İkitelli Gişeler Çıkışı</td>
+                                <td>34-B-08 (Trafik Denetleme)</td>
+                                <td>89 Araç / 210 Şahıs</td>
+                                <td><span style="color:#138808; font-weight:bold;">Aktif Uygulama</span></td>
+                                <td><button class="gri-btn" style="padding:4px 10px; font-size:11px;" onclick="alert('NKT-3402 noktası KGYS kameraları ile senkronize edildi.')">DETAY</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>NKT-3403</strong></td>
+                                <td>E-5 Karayolu Küçükçekmece Sapağı</td>
+                                <td>34-C-22 (Yunus Timleri)</td>
+                                <td>31 Araç / 84 Şahıs</td>
+                                <td><span style="color:#d97706; font-weight:bold;">Geçici Durduruldu</span></td>
+                                <td><button class="gri-btn" style="padding:4px 10px; font-size:11px;" onclick="alert('NKT-3403 noktası devriye turu için aktifleştiriliyor.')">AKTİFLEŞTİR</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; border-top:1px solid #e2e8f0; padding-top:12px;">
+                        <span style="font-size:11.5px; color:#64748b;">Saha Koordinasyon Merkezi İletişim: <strong>Dahili 4421</strong></span>
+                        <div style="display:flex; gap:8px;">
+                            <button class="aksiyon-btn" style="background:#1d3898;" onclick="alert('Yeni uygulama noktası oluşturma paneli açılıyor.')">+ YENİ NOKTA TANIMLA</button>
+                            <button class="aksiyon-btn" style="background:#c00000;" onclick="alert('İl geneli acil asayiş alarm durumu Komuta Merkezine bildirildi!')">🚨 İL GENELİ ALARM</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Giriş başarılı olunca UTP menü ekranını açar (Örn: sistemeGirisYap fonksiyonunun içine ekleyebilirsin)
+        function girisBasariliGoster() {
+            document.getElementById('girisEkrani').style.display = 'none';
+            document.getElementById('tabletMenuEkrani').style.display = 'flex';
+        }
+
+        // Trafik kartına basınca menüyü kapatıp asıl sorgu paneline geçer
+        function polnetPanelineGec() {
+            document.getElementById('tabletMenuEkrani').style.display = 'none';
+        }
+
+        // Çıkış yapıp tekrar giriş ekranına döner
+        function oturumuKapatMenu() {
+            document.getElementById('tabletMenuEkrani').style.display = 'none';
+            document.getElementById('girisEkrani').style.display = 'flex';
+            document.getElementById('girisSicil').value = '';
+            document.getElementById('girisParola').value = '';
+        }
+
+        // Ana ekrandaki ev (🏠) butonuna basıldığında tekrar UTP menüsüne döner
+        function varsayilanaDon() {
+            butonSeciminiGuncelle(null);
+            document.getElementById('ekran-baslik').innerText = ""; // Başlık yazısı kaldırıldı
+            document.getElementById('ekran-icerik').innerHTML = ""; // İçerik tamamen boşaltıldı
+        }
+
+        function sistemeGirisYap() {
+            const sicil = document.getElementById('girisSicil').value.trim();
+            const parola = document.getElementById('girisParola').value.trim();
+            const hataKutusu = document.getElementById('girisHataMesaji');
+
+            // Doğru sicil ve parola eşleşmeleri (İstediğin kombinasyonları buraya ekleyebilirsin)
+            const dogruGiris = 
+                (sicil === "652876" && parola === "476969") ||
+                (sicil === "00" && (parola === "111111" || parola === "343434" || parola === "00"));
+
+            if (dogruGiris) {
+                // Hata mesajını temizle ve giriş ekranını gizle
+                hataKutusu.innerText = "";
+                document.getElementById('girisEkrani').style.display = 'none';
+                
+                // Doğrudan UTP / Uygulama Seçim Menüsünü göster
+                document.getElementById('tabletMenuEkrani').style.display = 'flex';
+            } else {
+                hataKutusu.innerText = "Hatalı Sicil Numarası veya Parola!";
+            }
+        }
+        function saatiGuncelle() {
+            const simdi = new Date();
+            const saat = String(simdi.getHours()).padStart(2, '0');
+            const dakika = String(simdi.getMinutes()).padStart(2, '0');
+            document.getElementById('saat-kutusu').innerText = `${saat}:${dakika}`;
+        }
+        setInterval(saatiGuncelle, 1000);
+        saatiGuncelle();
+
+        function butonSeciminiGuncelle(secilenButon) {
+            document.querySelectorAll('.buton').forEach(btn => btn.classList.remove('secili'));
+            if (secilenButon) {
+                secilenButon.classList.add('secili');
+            }
+        }
+
+        function varsayilanaDon() {
+            butonSeciminiGuncelle(null);
+            document.getElementById('ekran-baslik').innerText = "";
+            document.getElementById('ekran-icerik').innerHTML = "<p style='color: #ddd;'></p>";
+        }
+
+        function metinGoster(baslik, icerik, butonEl) {
+            butonSeciminiGuncelle(butonEl);
+            document.getElementById('ekran-baslik').innerText = baslik;
+            document.getElementById('ekran-icerik').innerHTML = `<div class="sonuc-kutusu"><p>${icerik}</p></div>`;
+        }
+
+        // ==========================================
+        // MERNİS & GBT GERÇEKÇİ VATANDAŞ VERİTABANI
+        // ==========================================
+        const mernisVatandaslar = {
+            "25553696944": {
+                tc: "25553696944",
+                ad: "ÖMER",
+                soyad: "TÜRK",
+                babaAdi: "MURAT",
+                anaAdi: "SEÇİL",
+                dogumYeri: "GÜNGÖREN / İSTANBUL",
+                dogumTarihi: "30.08.2007",
+                medeniHal: "BEKÂR",
+                din: "İSLAM",
+                cinsiyet: "ERKEK",
+                nufusIl: "İSTANBUL",
+                nufusIlce: "BAŞAKŞEHİR",
+                ciltNo: "0014",
+                aileSiraNo: "0028",
+                bireySiraNo: "02",
+                kanGrubu: "0 (RH+)",
+                boyKilo: "180 cm / 88 kg",
+                foto: "profil.jpg",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-25553696",
+                    retinaKaydi: "MEVCUT (Sürüm 4.1)",
+                    yuzTanimaOrani: "%99.8 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+                uavtAdres: "Başöğretmen Caddesi Asmalı Bahçeşehir Sitesi B10/6 Başakşehir / İSTANBUL (UAVT Kodu: 34091823)",
+                adli: {
+                    durum: "TEMİZ (SABIKASIZ)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın adli sicil ve adli arşiv kaydı TEMİZDİR. Herhangi bir aranma, mahkeme celbi, yakalama veya idari tahdit kaydı bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+            },
+"10127852680": {
+        tc: "10127852680",
+        ad: "AYSU",
+        soyad: "FIRTINA",
+        babaAdi: "AYDIN",
+        anaAdi: "AYŞE AYLİN",
+        dogumYeri: "ZİLE / TOKAT",
+        dogumTarihi: "29.01.2005",
+        medeniHal: "BEKAR",
+        din: "İSLAM",
+        cinsiyet: "KADIN",
+        nufusIl: "TOKAT",
+        nufusIlce: "ZİLE",
+        ciltNo: "0042",
+        aileSiraNo: "0105",
+        bireySiraNo: "02",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-10127852",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.1 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "B, A2 Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+        uavtAdres: "yunus emre mahallesi 30 ağustos zafer caddesi esentepe apartmanı kapı no: 1 iç no : 12 ZİLE / TOKAT",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "SİLAHLI",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+"25244707102": {
+                tc: "25244707102",
+                ad: "ÖYKÜ",
+                soyad: "DUMAN",
+                babaAdi: "CANER",
+                anaAdi: "EMEL",
+                dogumYeri: "BAHÇELİEVLER / İSTANBUL",
+                dogumTarihi: "23.01.2007",
+                medeniHal: "BEKÂR",
+                din: "İSLAM",
+                cinsiyet: "KADIN",
+                nufusIl: "İSTANBUL",
+                nufusIlce: "BAĞCILAR",
+                ciltNo: "-",
+                aileSiraNo: "310",
+                bireySiraNo: "66",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "profil.jpg",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-25244707",
+                    retinaKaydi: "MEVCUT (Sürüm 4.1)",
+                    yuzTanimaOrani: "%99.7 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "Sürücü Belgesi Bulunmuyor",
+                uavtAdres: "BAĞCILAR / İSTANBUL",
+                adli: {
+                    durum: "TEMİZ (SABIKASIZ)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın adli sicil ve adli arşiv kaydı TEMİZDİR. Herhangi bir aranma, mahkeme celbi, yakalama veya idari tahdit kaydı bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "Kayıt Bulunmuyor"
+            },
+"10280538018": {
+                tc: "10280538018",
+                ad: "TUNAHAN",
+                soyad: "ŞAHİN",
+                babaAdi: "ÜMİT HABİB",
+                anaAdi: "CANAN",
+                dogumYeri: "BAHÇELİEVLER / İSTANBUL",
+                dogumTarihi: "28.01.2006",
+                medeniHal: "BEKÂR",
+                din: "İSLAM",
+                cinsiyet: "ERKEK",
+                nufusIl: "TOKAT",
+                nufusIlce: "NİKSAR",
+                ciltNo: "-",
+                aileSiraNo: "91",
+                bireySiraNo: "16",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "profil.jpg",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-10280538",
+                    retinaKaydi: "MEVCUT (Sürüm 4.1)",
+                    yuzTanimaOrani: "%99.8 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "Sürücü Belgesi Bulunmuyor",
+                uavtAdres: "BAKIRKÖY / İSTANBUL",
+                adli: {
+                    durum: "TEMİZ (SABIKASIZ)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın adli sicil ve adli arşiv kaydı TEMİZDİR. Herhangi bir aranma, mahkeme celbi, yakalama veya idari tahdit kaydı bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "Kayıt Bulunmuyor"
+            },
+
+"27820969980": {
+                tc: "27820969980",
+                ad: "SUDE",
+                soyad: "BÜYÜKBÜBEROĞLU",
+                babaAdi: "ZAFER MURAT",
+                anaAdi: "SEVDA",
+                dogumYeri: "GÜNGÖREN / İSTANBUL",
+                dogumTarihi: "06.01.2006",
+                medeniHal: "BEKÂR",
+                din: "İSLAM",
+                cinsiyet: "KADIN",
+                nufusIl: "KAYSERİ",
+                nufusIlce: "MELİKGAZİ",
+                ciltNo: "-",
+                aileSiraNo: "467",
+                bireySiraNo: "55",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "profil.jpg",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-27820969",
+                    retinaKaydi: "MEVCUT (Sürüm 4.1)",
+                    yuzTanimaOrani: "%99.7 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "Sürücü Belgesi Bulunmuyor",
+                uavtAdres: "GÜNGÖREN / İSTANBUL (GSM: 5322955329)",
+                adli: {
+                    durum: "TEMİZ (SABIKASIZ)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın adli sicil ve adli arşiv kaydı TEMİZDİR. Herhangi bir aranma, mahkeme celbi, yakalama veya idari tahdit kaydı bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "Kayıt Bulunmuyor"
+            },
+"16778816194": {
+        tc: "16778816194",
+        ad: "SEÇİL",
+        soyad: "TÜRK",
+        babaAdi: "REŞİT",
+        anaAdi: "HATİCE",
+        dogumYeri: "SİNCAN / ANKARA",
+        dogumTarihi: "20.08.1988",
+        medeniHal: "EVLİ",
+        din: "İSLAM",
+        cinsiyet: "KADIN",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "BAŞAKŞEHİR",
+        ciltNo: "0019",
+        aileSiraNo: "0044",
+        bireySiraNo: "01",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-16778816",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.4 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+        uavtAdres: "Başöğretmen Caddesi Asmalıbahçeşehir Sitesi B10/6 Başakşehir / İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+"38506577146": {
+        tc: "38506577146",
+        ad: "ENES",
+        soyad: "SARAL",
+        babaAdi: "TOLGA",
+        anaAdi: "GÜLER",
+        dogumYeri: "BAĞCILAR / İSTANBUL",
+        dogumTarihi: "09.06.2003",
+        medeniHal: "BEKÂR",
+        din: "İSLAM",
+        cinsiyet: "ERKEK",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "BAKIRKÖY",
+        ciltNo: "0015",
+        aileSiraNo: "0090",
+        bireySiraNo: "05",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-38506577",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.5 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+        uavtAdres: "Bağcılar Mah. İstanbul Cad. No: 42 Bağcılar / İSTANBUL",
+        adli: {
+            durum: "ARANTI MEVCUT",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı MEVCUT"
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+    "47170288692": {
+                tc: "47170288692",
+                ad: "ECRİN",
+                soyad: "ELYİĞİT",
+                babaAdi: "MURAT",
+                anaAdi: "AYŞE",
+                dogumYeri: "BAĞCILAR / İSTANBUL",
+                dogumTarihi: "25.05.2006",
+                medeniHal: "BEKÂR",
+                din: "İSLAM",
+                cinsiyet: "KADIN",
+                nufusIl: "VAN",
+                nufusIlce: "TUŞBA",
+                ciltNo: "-",
+                aileSiraNo: "2",
+                bireySiraNo: "162",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "profil.jpg",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-47170288",
+                    retinaKaydi: "MEVCUT (Sürüm 4.1)",
+                    yuzTanimaOrani: "%99.7 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "Sürücü Belgesi Bulunmuyor",
+                uavtAdres: "BEYLİKDÜZÜ / İSTANBUL (GSM: 5365869216)",
+                adli: {
+                    durum: "TEMİZ (SABIKASIZ)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın adli sicil ve adli arşiv kaydı TEMİZDİR. Herhangi bir aranma, mahkeme celbi, yakalama veya idari tahdit kaydı bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "Kayıt Bulunmuyor"
+            },
+"11457149440": {
+        tc: "11457149440",
+        ad: "AYŞE İREM",
+        soyad: "GÜLER",
+        babaAdi: "BARBAROS HAYRETTİN",
+        anaAdi: "FAHRİYE",
+        dogumYeri: "BAŞAKŞEHİR / İSTANBUL",
+        dogumTarihi: "25.10.2006",
+        medeniHal: "BEKÂR",
+        din: "İSLAM",
+        cinsiyet: "KADIN",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "BAŞAKŞEHİR",
+        ciltNo: "0027",
+        aileSiraNo: "0142",
+        bireySiraNo: "03",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-11457149",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.7 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "YOK (Yaş Sınırı / Henüz Alınmadı)",
+        uavtAdres: "Bahçeşehir 1. Kısım Mah. Fırat Cad. Vadi Tepe 2. Bölge A4 64 Başakşehir / İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+"63439444838": {
+        tc: "63439444838",
+        ad: "YASİN",
+        soyad: "TÜRK",
+        babaAdi: "MURAT",
+        anaAdi: "SEÇİL",
+        dogumYeri: "BAŞAKŞEHİR / İSTANBUL",
+        dogumTarihi: "25.06.2014",
+        medeniHal: "BEKÂR",
+        din: "İSLAM",
+        cinsiyet: "ERKEK",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "BAŞAKŞEHİR",
+        ciltNo: "0014",
+        aileSiraNo: "0028",
+        bireySiraNo: "03",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-63439444",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.9 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "YOK (Yaş Sınırı / Henüz Alınmadı)",
+        uavtAdres: "Bahçeşehir 1. Kısım Mahallesi Başöğretmen Caddesi Asmalı Bahçeşehir Sitesi B10/6 Başakşehir / İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+"Yasin Türk": {
+        tc: "63439444838",
+        ad: "YASİN",
+        soyad: "TÜRK",
+        babaAdi: "MURAT",
+        anaAdi: "SEÇİL",
+        dogumYeri: "BAŞAKŞEHİR / İSTANBUL",
+        dogumTarihi: "25.06.2014",
+        medeniHal: "BEKÂR",
+        din: "İSLAM",
+        cinsiyet: "ERKEK",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "BAŞAKŞEHİR",
+        ciltNo: "0014",
+        aileSiraNo: "0028",
+        bireySiraNo: "03",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-63439444",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.9 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "YOK (Yaş Sınırı / Henüz Alınmadı)",
+        uavtAdres: "Bahçeşehir 1. Kısım Mahallesi Başöğretmen Caddesi Asmalı Bahçeşehir Sitesi B10/6 Başakşehir / İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+            "Ömer Türk": {
+                tc: "25553696944",
+                ad: "ÖMER",
+                soyad: "TÜRK",
+                babaAdi: "MURAT",
+                anaAdi: "SEÇİL",
+                dogumYeri: "GÜNGÖREN / İSTANBUL",
+                dogumTarihi: "30.08.2007",
+                medeniHal: "BEKÂR",
+                din: "İSLAM",
+                cinsiyet: "ERKEK",
+                nufusIl: "İSTANBUL",
+                nufusIlce: "BAŞAKŞEHİR",
+                ciltNo: "0014",
+                aileSiraNo: "0028",
+                bireySiraNo: "02",
+                kanGrubu: "0 (RH+)",
+                boyKilo: "180 cm / 88 kg",
+                foto: "profil.jpg",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-25553696",
+                    retinaKaydi: "MEVCUT (Sürüm 4.1)",
+                    yuzTanimaOrani: "%99.8 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+                uavtAdres: "Başöğretmen Caddesi Asmalı Bahçeşehir Sitesi B10/6 Başakşehir / İSTANBUL (UAVT Kodu: 34091823)",
+                adli: {
+                    durum: "TEMİZ (SABIKASIZ)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın adli sicil ve adli arşiv kaydı TEMİZDİR. Herhangi bir aranma, mahkeme celbi, yakalama veya idari tahdit kaydı bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+            },
+            "13538290348": {
+                tc: "13538290348",
+                ad: "DURU",
+                soyad: "KAYA",
+                babaAdi: "ZAFER",
+                babaTc: "26378302034",
+                anaAdi: "GÜLDEN",
+                anneTc: "51046176594",
+                dogumYeri: "BAKIRKÖY",
+                dogumTarihi: "2007-11-06",
+                olumTarihi: "YOK",
+                memleketIl: "Sivas",
+                memleketIlce: "Koyulhisar",
+                memleketKoy: "YALNIZTEPE",
+                adresIl: "İSTANBUL",
+                adresIlce: "BAKIRKÖY",
+                adres: "Bakırköy / İstanbul",
+                ciltNo: "",
+                aileSiraNo: "17",
+                bireySiraNo: "258",
+                medeniHal: "Bekâr",
+                din: "İSLAM",
+                cinsiyet: "Kadın",
+                nufusIl: "İSTANBUL",
+                nufusIlce: "BAKIRKÖY",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-13538290",
+                    retinaKaydi: "MEVCUT",
+                    yuzTanimaOrani: "%99.7 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "YOK (Yaş Sınırı / Henüz Alınmadı)",
+                uavtAdres: "Bakırköy / İSTANBUL",
+                adli: {
+                    durum: "TEMİZ (ARANTI YOK)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+            },
+            
+            "26984009402": {
+                tc: "26984009402",
+                ad: "CANSU",
+                soyad: "AFİYON",
+                babaAdi: "ZAFER",
+                babaTc: "37096268854",
+                anaAdi: "HALİME",
+                anneTc: "14960005746",
+                dogumYeri: "SİLİVRİ",
+                dogumTarihi: "2009-01-02",
+                olumTarihi: "YOK",
+                memleketIl: "Edirne",
+                memleketIlce: "Uzunköprü",
+                memleketKoy: "KIRKKAVAK",
+                adresIl: "İSTANBUL",
+                adresIlce: "BÜYÜKÇEKMECE",
+                adres: "Büyükçekmece / İstanbul",
+                ciltNo: "",
+                aileSiraNo: "165",
+                bireySiraNo: "56",
+                medeniHal: "Bekâr",
+                din: "İSLAM",
+                cinsiyet: "Kadın",
+                nufusIl: "İSTANBUL",
+                nufusIlce: "BÜYÜKÇEKMECE",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-26984009",
+                    retinaKaydi: "MEVCUT",
+                    yuzTanimaOrani: "%99.2 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "YOK (Yaş Sınırı / Henüz Alınmadı)",
+                uavtAdres: "Büyükçekmece / İSTANBUL",
+                adli: {
+                    durum: "TEMİZ (ARANTI YOK)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+            },
+            "43927410460": {
+                tc: "43927410460",
+                ad: "ÖMER BURAK",
+                soyad: "ÇOKRAN",
+                gsm: "5324959050",
+                babaAdi: "TİBET",
+                babaTc: "44368476114",
+                anaAdi: "FİLİZ",
+                anneTc: "42178228060",
+                dogumYeri: "BAKIRKÖY",
+                dogumTarihi: "2007-08-19",
+                olumTarihi: "YOK",
+                memleketIl: "İzmir",
+                memleketIlce: "Tire",
+                memleketKoy: "BAHARİYE",
+                adresIl: "İSTANBUL",
+                adresIlce: "ESENYURT",
+                adres: "Esenyurt / İstanbul",
+                ciltNo: "",
+                aileSiraNo: "127",
+                bireySiraNo: "22",
+                medeniHal: "Bekâr",
+                din: "İSLAM",
+                cinsiyet: "Erkek",
+                nufusIl: "İSTANBUL",
+                nufusIlce: "ESENYURT",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-43927410",
+                    retinaKaydi: "MEVCUT",
+                    yuzTanimaOrani: "%99.4 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+                uavtAdres: "Esenyurt / İSTANBUL",
+                adli: {
+                    durum: "TEMİZ (ARANTI YOK)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+            },
+            "30755099288": {
+                tc: "30755099288",
+                ad: "FURKAN",
+                soyad: "EVLİYAOĞLU",
+                babaAdi: "BÜLENT",
+                babaTc: "30842096350",
+                anaAdi: "AYŞİN",
+                anneTc: "30797097822",
+                dogumYeri: "MALATYA",
+                dogumTarihi: "1992-04-29",
+                olumTarihi: "YOK",
+                memleketIl: "Malatya",
+                memleketIlce: "Battalgazi",
+                memleketKoy: "KERNEK",
+                adresIl: "İSTANBUL",
+                adresIlce: "KADIKÖY",
+                adres: "Kadıköy / İstanbul",
+                ciltNo: "",
+                aileSiraNo: "52",
+                bireySiraNo: "61",
+                medeniHal: "Bekâr",
+                din: "İSLAM",
+                cinsiyet: "Erkek",
+                nufusIl: "İSTANBUL",
+                nufusIlce: "KADIKÖY",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-30755099",
+                    retinaKaydi: "MEVCUT",
+                    yuzTanimaOrani: "%99.5 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+                uavtAdres: "Kadıköy / İSTANBUL",
+                adli: {
+                    durum: "TEMİZ (ARANTI YOK)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+            },
+            
+            "45178368620": {
+                tc: "45178368620",
+                ad: "YİĞİT EFE",
+                soyad: "TOSUN",
+                babaAdi: "MURAT",
+                babaTc: "49327233340",
+                anaAdi: "YELİZ",
+                anneTc: "62230206720",
+                dogumYeri: "BAHÇELİEVLER",
+                dogumTarihi: "2007-10-19",
+                olumTarihi: "YOK",
+                memleketIl: "İstanbul",
+                memleketIlce: "Fatih",
+                memleketKoy: "KEMALPAŞA",
+                adresIl: "İSTANBUL",
+                adresIlce: "BAŞAKŞEHİR",
+                adres: "Başakşehir / İstanbul",
+                ciltNo: "",
+                aileSiraNo: "262",
+                bireySiraNo: "42",
+                medeniHal: "Bekâr",
+                din: "İSLAM",
+                cinsiyet: "Erkek",
+                nufusIl: "İSTANBUL",
+                nufusIlce: "BAŞAKŞEHİR",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-45178368",
+                    retinaKaydi: "MEVCUT",
+                    yuzTanimaOrani: "%99.6 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "YOK (Yaş Sınırı / Henüz Alınmadı)",
+                uavtAdres: "Başakşehir / İSTANBUL",
+                adli: {
+                    durum: "TEMİZ (ARANTI YOK)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+            },
+            "35273198604": {
+                tc: "35273198604",
+                ad: "AYŞE AYLİN",
+                soyad: "SİLAHLI FIRTINA",
+                babaAdi: "İSMAİL",
+                babaTc: "35345196286",
+                anaAdi: "GÜLSER",
+                anneTc: "35279198486",
+                dogumYeri: "TURHAL",
+                dogumTarihi: "1973-05-12",
+                olumTarihi: "YOK",
+                memleketIl: "Tokat",
+                memleketIlce: "Zile",
+                adresIl: "BİLİNMİYOR",
+                adresIlce: "BİLİNMİYOR",
+                adres: "BİLİNMİYOR",
+                ciltNo: "",
+                aileSiraNo: "32",
+                bireySiraNo: "37",
+                medeniHal: "Evli",
+                din: "İSLAM",
+                cinsiyet: "Kadın",
+                nufusIl: "TOKAT",
+                nufusIlce: "ZİLE",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-35273198",
+                    retinaKaydi: "MEVCUT",
+                    yuzTanimaOrani: "%99.1 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+                uavtAdres: "BİLİNMİYOR",
+                adli: {
+                    durum: "TEMİZ (ARANTI YOK)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+            },
+            "25361342286": {
+                tc: "25361342286",
+                ad: "AYDIN",
+                soyad: "FIRTINA",
+                gsm: "+905325904280, +905322300779",
+                babaAdi: "SAMİ",
+                babaTc: "25385341494",
+                anaAdi: "AYİŞE",
+                anneTc: "25367342068",
+                dogumYeri: "ZİLE",
+                dogumTarihi: "1973-07-18",
+                olumTarihi: "YOK",
+                memleketIl: "Tokat",
+                memleketIlce: "Zile",
+                adresIl: "BİLİNMİYOR",
+                adresIlce: "BİLİNMİYOR",
+                adres: "BİLİNMİYOR",
+                ciltNo: "",
+                aileSiraNo: "32",
+                bireySiraNo: "19",
+                medeniHal: "Evli",
+                din: "İSLAM",
+                cinsiyet: "Erkek",
+                nufusIl: "TOKAT",
+                nufusIlce: "ZİLE",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-25361342",
+                    retinaKaydi: "MEVCUT",
+                    yuzTanimaOrani: "%99.7 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+                uavtAdres: "BİLİNMİYOR",
+                adli: {
+                    durum: "TEMİZ (ARANTI YOK)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+            },
+            "35219205298": {
+                tc: "35219205298",
+                ad: "BERAT UĞUR",
+                soyad: "ÖZOĞLU",
+                gsm: "5424015796",
+                babaAdi: "UĞUR",
+                babaTc: "26075509880",
+                anaAdi: "AYŞEGÜL",
+                anneTc: "26033511214",
+                dogumYeri: "TURHAL",
+                dogumTarihi: "2004-04-27",
+                olumTarihi: "YOK",
+                memleketIl: "Tokat",
+                memleketIlce: "Turhal",
+                memleketKoy: "YENİKÖY",
+                adresIl: "İSTANBUL",
+                adresIlce: "PENDİK",
+                adres: "Pendik / İstanbul",
+                ciltNo: "",
+                aileSiraNo: "84",
+                bireySiraNo: "40",
+                medeniHal: "Bekâr",
+                din: "İSLAM",
+                cinsiyet: "Erkek",
+                nufusIl: "İSTANBUL",
+                nufusIlce: "PENDİK",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-35219205",
+                    retinaKaydi: "MEVCUT",
+                    yuzTanimaOrani: "%99.4 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+                uavtAdres: "Pendik / İSTANBUL",
+                adli: {
+                    durum: "TEMİZ (ARANTI YOK)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+            },
+"Aysu Fırtına": {
+        tc: "10127852680",
+        ad: "AYSU",
+        soyad: "FIRTINA",
+        babaAdi: "AYDIN",
+        anaAdi: "AYŞE AYLİN",
+        dogumYeri: "ZİLE / TOKAT",
+        dogumTarihi: "29.01.2005",
+        medeniHal: "BEKAR",
+        din: "İSLAM",
+        cinsiyet: "KADIN",
+        nufusIl: "TOKAT",
+        nufusIlce: "ZİLE",
+        ciltNo: "0042",
+        aileSiraNo: "0105",
+        bireySiraNo: "02",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-10127852",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.1 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "B, A2 Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+        uavtAdres: "yunus emre mahallesi 30 ağustos zafer caddesi esentepe apartmanı kapı no: 1 iç no : 12 ZİLE / TOKAT",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "SİLAHLI",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+
+"65392297766": {
+        tc: "65392297766",
+        ad: "MURAT",
+        soyad: "TÜRK",
+        babaAdi: "HAŞİM",
+        anaAdi: "ŞENGÜL",
+        dogumYeri: "BAKIRKÖY / İSTANBUL",
+        dogumTarihi: "05.05.1983",
+        medeniHal: "EVLİ",
+        din: "İSLAM",
+        cinsiyet: "ERKEK",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "BAŞAKŞEHİR",
+        ciltNo: "0014",
+        aileSiraNo: "0028",
+        bireySiraNo: "01",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-65392297",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.6 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+        uavtAdres: "Bahçeşehir 1. Kısım Mahallesi Başöğretmen Caddesi Asmalı Bahçeşehir Sitesi B10/6 Başakşehir / İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+"11339363582": {
+                tc: "11339363582",
+                ad: "MEHMET ALİ",
+                soyad: "TARİ",
+                babaAdi: "MEHMET",
+                anaAdi: "EDA",
+                dogumYeri: "BAKIRKÖY / İSTANBUL",
+                dogumTarihi: "10.11.2005",
+                medeniHal: "BEKÂR",
+                din: "İSLAM",
+                cinsiyet: "ERKEK",
+                nufusIl: "MALATYA",
+                nufusIlce: "PÜTÜRGE",
+                ciltNo: "-",
+                aileSiraNo: "44",
+                bireySiraNo: "90",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "profil.jpg",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-11339363",
+                    retinaKaydi: "MEVCUT (Sürüm 4.1)",
+                    yuzTanimaOrani: "%99.8 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "Sürücü Belgesi Bulunmuyor",
+                uavtAdres: "BAKIRKÖY / İSTANBUL",
+                adli: {
+                    durum: "TEMİZ (SABIKASIZ)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın adli sicil ve adli arşiv kaydı TEMİZDİR. Herhangi bir aranma, mahkeme celbi, yakalama veya idari tahdit kaydı bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "Kayıt Bulunmuyor"
+            },
+            
+    "20534190206": {
+                tc: "20534190206",
+                ad: "YUNUS",
+                soyad: "NAJİM",
+                babaAdi: "AYET",
+                anaAdi: "ŞANLI",
+                dogumYeri: "GÜNGÖREN / İSTANBUL",
+                dogumTarihi: "19.08.2005",
+                medeniHal: "BEKÂR",
+                din: "İSLAM",
+                cinsiyet: "ERKEK",
+                nufusIl: "İSTANBUL",
+                nufusIlce: "KADIKÖY",
+                ciltNo: "-",
+                aileSiraNo: "6497",
+                bireySiraNo: "11",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "profil.jpg",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-20534190",
+                    retinaKaydi: "MEVCUT (Sürüm 4.1)",
+                    yuzTanimaOrani: "%99.8 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "Sürücü Belgesi Bulunmuyor",
+                uavtAdres: "BEYLİKDÜZÜ / İSTANBUL",
+                adli: {
+                    durum: "TEMİZ (SABIKASIZ)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın adli sicil ve adli arşiv kaydı TEMİZDİR. Herhangi bir aranma, mahkeme celbi, yakalama veya idari tahdit kaydı bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "Kayıt Bulunmuyor"
+            },
+            "65695167780": {
+                tc: "65695167780",
+                ad: "HATİCE",
+                soyad: "TÜRK",
+                babaAdi: "ŞEVKET",
+                anaAdi: "GÜLÜZAR",
+                dogumYeri: "NİKSAR",
+                dogumTarihi: "14.09.1964",
+                medeniHal: "EVLİ",
+                din: "İSLAM",
+                cinsiyet: "KADIN",
+                nufusIl: "BAYBURT",
+                nufusIlce: "MERKEZ",
+                ciltNo: "-",
+                aileSiraNo: "43",
+                bireySiraNo: "182",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "profil.jpg",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-65695167",
+                    retinaKaydi: "MEVCUT (Sürüm 4.1)",
+                    yuzTanimaOrani: "%99.6 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "Sürücü Belgesi Bulunmuyor",
+                uavtAdres: "ESENYURT / İSTANBUL (GSM: 5453096412)",
+                adli: {
+                    durum: "TEMİZ (SABIKASIZ)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın adli sicil ve adli arşiv kaydı TEMİZDİR. Herhangi bir aranma, mahkeme celbi, yakalama veya idari tahdit kaydı bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "Kayıt Bulunmuyor"
+            },
+            "29707907078": {
+                tc: "29707907078",
+                ad: "YUNUS EMRE",
+                soyad: "GENÇER",
+                babaAdi: "ÖMER",
+                anaAdi: "MERYEM",
+                dogumYeri: "BAĞCILAR",
+                dogumTarihi: "08.08.2006",
+                medeniHal: "BEKÂR",
+                din: "İSLAM",
+                cinsiyet: "ERKEK",
+                nufusIl: "BAYBURT",
+                nufusIlce: "AYDINTEPE",
+                ciltNo: "-",
+                aileSiraNo: "35",
+                bireySiraNo: "102",
+                kanGrubu: "BİLİNMİYOR",
+                boyKilo: "BİLİNMİYOR",
+                foto: "profil.jpg",
+                biyometrik: {
+                    parmakIziKodu: "AFIS-TR-29707907",
+                    retinaKaydi: "MEVCUT (Sürüm 4.1)",
+                    yuzTanimaOrani: "%99.8 Doğrulandı",
+                    dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+                },
+                ehliyet: "Sürücü Belgesi Bulunmuyor",
+                uavtAdres: "BAĞCILAR / İSTANBUL",
+                adli: {
+                    durum: "TEMİZ (SABIKASIZ)",
+                    rozetClass: "rozet-yesil",
+                    icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın adli sicil ve adli arşiv kaydı TEMİZDİR. Herhangi bir aranma, mahkeme celbi, yakalama veya idari tahdit kaydı bulunmamaktadır."
+                },
+                silahRuhsati: "YOK",
+                pasaport: "Kayıt Bulunmuyor"
+            },
+"Murat Türk": {
+        tc: "65392297766",
+        ad: "MURAT",
+        soyad: "TÜRK",
+        babaAdi: "HAŞİM",
+        anaAdi: "ŞENGÜL",
+        dogumYeri: "BAKIRKÖY / İSTANBUL",
+        dogumTarihi: "05.05.1983",
+        medeniHal: "EVLİ",
+        din: "İSLAM",
+        cinsiyet: "ERKEK",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "BAŞAKŞEHİR",
+        ciltNo: "0014",
+        aileSiraNo: "0028",
+        bireySiraNo: "01",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-65392297",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.6 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+        uavtAdres: "Bahçeşehir 1. Kısım Mahallesi Başöğretmen Caddesi Asmalı Bahçeşehir Sitesi B10/6 Başakşehir / İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+"44915054710": {
+        tc: "44915054710",
+        ad: "ÖMER BERKAY",
+        soyad: "BALCI",
+        babaAdi: "SİNAN",
+        anaAdi: "PINAR",
+        dogumYeri: "GÜNGÖREN / İSTANBUL",
+        dogumTarihi: "06.05.2010",
+        medeniHal: "BEKÂR",
+        din: "İSLAM",
+        cinsiyet: "ERKEK",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "GÜNGÖREN",
+        ciltNo: "0012",
+        aileSiraNo: "0104",
+        bireySiraNo: "01",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-44915054",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.8 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "YOK (Yaş Sınırı / Henüz Alınmadı)",
+        uavtAdres: "Merkez Mah. Güngören / İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+    "44912054874": {
+        tc: "44912054874",
+        ad: "MURAT BERAT",
+        soyad: "BALCI",
+        babaAdi: "SİNAN",
+        anaAdi: "PINAR",
+        dogumYeri: "GÜNGÖREN / İSTANBUL",
+        dogumTarihi: "06.05.2010",
+        medeniHal: "BEKÂR",
+        din: "İSLAM",
+        cinsiyet: "ERKEK",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "GÜNGÖREN",
+        ciltNo: "0012",
+        aileSiraNo: "0104",
+        bireySiraNo: "02",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-44912054",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.7 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "YOK (Yaş Sınırı / Henüz Alınmadı)",
+        uavtAdres: "Merkez Mah. Güngören / İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+"Ömer Berkay Balcı": {
+        tc: "44915054710",
+        ad: "ÖMER BERKAY",
+        soyad: "BALCI",
+        babaAdi: "SİNAN",
+        anaAdi: "PINAR",
+        dogumYeri: "GÜNGÖREN / İSTANBUL",
+        dogumTarihi: "06.05.2010",
+        medeniHal: "BEKÂR",
+        din: "İSLAM",
+        cinsiyet: "ERKEK",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "GÜNGÖREN",
+        ciltNo: "0012",
+        aileSiraNo: "0104",
+        bireySiraNo: "01",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-44915054",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.8 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "YOK (Yaş Sınırı / Henüz Alınmadı)",
+        uavtAdres: "Merkez Mah. Güngören / İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+    "Murat Berat Balcı": {
+        tc: "44912054874",
+        ad: "MURAT BERAT",
+        soyad: "BALCI",
+        babaAdi: "SİNAN",
+        anaAdi: "PINAR",
+        dogumYeri: "GÜNGÖREN / İSTANBUL",
+        dogumTarihi: "06.05.2010",
+        medeniHal: "BEKÂR",
+        din: "İSLAM",
+        cinsiyet: "ERKEK",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "GÜNGÖREN",
+        ciltNo: "0012",
+        aileSiraNo: "0104",
+        bireySiraNo: "02",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-44912054",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.7 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "YOK (Yaş Sınırı / Henüz Alınmadı)",
+        uavtAdres: "Merkez Mah. Güngören / İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+"16775816258": {
+        tc: "16775816258",
+        ad: "PINAR",
+        soyad: "BALCI",
+        babaAdi: "REŞİT",
+        anaAdi: "HATİCE",
+        dogumYeri: "ÇANKAYA / ANKARA",
+        dogumTarihi: "29.11.1989",
+        medeniHal: "EVLİ",
+        din: "İSLAM",
+        cinsiyet: "KADIN",
+        nufusIl: "ANKARA",
+        nufusIlce: "ÇANKAYA",
+        ciltNo: "0045",
+        aileSiraNo: "0112",
+        bireySiraNo: "02",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-16775816",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.6 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+        uavtAdres: "Çankaya Mah. Ankara Cad. Çankaya / ANKARA",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+"Pınar Balcı": {
+        tc: "16775816258",
+        ad: "PINAR",
+        soyad: "BALCI",
+        babaAdi: "REŞİT",
+        anaAdi: "HATİCE",
+        dogumYeri: "ÇANKAYA / ANKARA",
+        dogumTarihi: "29.11.1989",
+        medeniHal: "EVLİ",
+        din: "İSLAM",
+        cinsiyet: "KADIN",
+        nufusIl: "ANKARA",
+        nufusIlce: "ÇANKAYA",
+        ciltNo: "0045",
+        aileSiraNo: "0112",
+        bireySiraNo: "02",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-16775816",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.6 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+        uavtAdres: "Çankaya Mah. Ankara Cad. Çankaya / ANKARA",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+"257254056416": {
+        tc: "257254056416",
+        ad: "ZEYNEP",
+        soyad: "KARAKUŞ",
+        babaAdi: "MEHMET",
+        anaAdi: "FATMA",
+        dogumYeri: "SAKARYA",
+        dogumTarihi: "16.09.2003",
+        medeniHal: "BEKÂR",
+        din: "İSLAM",
+        cinsiyet: "KADIN",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "FATİH",
+        ciltNo: "0012",
+        aileSiraNo: "0055",
+        bireySiraNo: "04",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-25725405",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.5 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+        uavtAdres: "İdil Mah. İstanbul Cad. İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    },
+"Zeynep Karakuş": {
+        tc: "257254056416",
+        ad: "ZEYNEP",
+        soyad: "KARAKUŞ",
+        babaAdi: "MEHMET",
+        anaAdi: "FATMA",
+        dogumYeri: "SAKARYA",
+        dogumTarihi: "16.09.2003",
+        medeniHal: "BEKÂR",
+        din: "İSLAM",
+        cinsiyet: "KADIN",
+        nufusIl: "İSTANBUL",
+        nufusIlce: "FATİH",
+        ciltNo: "0012",
+        aileSiraNo: "0055",
+        bireySiraNo: "04",
+        kanGrubu: "BİLİNMİYOR",
+        boyKilo: "BİLİNMİYOR",
+        foto: "",
+        biyometrik: {
+            parmakIziKodu: "AFIS-TR-25725405",
+            retinaKaydi: "MEVCUT",
+            yuzTanimaOrani: "%99.5 Doğrulandı",
+            dnaProfili: "ARŞİVDE MEVCUT DEĞİL"
+        },
+        ehliyet: "B Sınıfı Sürücü Belgesi (Aktif / Geçerli)",
+        uavtAdres: "İdil Mah. İstanbul Cad. İSTANBUL",
+        adli: {
+            durum: "TEMİZ (ARANTI YOK)",
+            rozetClass: "rozet-yesil",
+            icerik: "UYAP Adli Sicil ve Asayiş GBT Kaydı: Şahsın aranma kaydı, tahdit veya yakalama emri bulunmamaktadır."
+        },
+        silahRuhsati: "YOK",
+        pasaport: "UMUMA MAHSUS (Bordo) - Geçerli"
+    }
+        };
+
+        // 30 ADET AVRUPA ÜLKESİNE ÖZEL PLAKA STİLLERİ
+        const ulkePlakaStandartlari = {
+            "TR": { ad: "Türkiye", ornek: "34 ABC 789", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "★", sagBant: false },
+            "F":  { ad: "Fransa", ornek: "AA-123-AA", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: true, sagMetin: "75" },
+            "D":  { ad: "Almanya", ornek: "B-MW 1234", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "NL": { ad: "Hollanda", ornek: "G-123-GB", bg: "#f5c518", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "GB": { ad: "Birleşik Krallık", ornek: "AB12 CDE", bg: "#ffd700", color: "#111111", solBg: "#006600", solColor: "#ffffff", yildiz: "🇬🇧", sagBant: false },
+            "I":  { ad: "İtalya", ornek: "ZA 123 AA", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: true, sagMetin: "RM" },
+            "CH": { ad: "İsviçre", ornek: "ZH 123456", bg: "#ffffff", color: "#111111", solBg: "#d90000", solColor: "#ffffff", yildiz: "🇨🇭", sagBant: false },
+            "A":  { ad: "Avusturya", ornek: "W 12345 A", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "B":  { ad: "Belçika", ornek: "1-ABC-123", bg: "#ffffff", color: "#8a001a", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "E":  { ad: "İspanya", ornek: "1234 BBB", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "P":  { ad: "Portekiz", ornek: "00-AA-00", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "BG": { ad: "Bulgaristan", ornek: "CB 1234 AB", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "GR": { ad: "Yunanistan", ornek: "ABH-1234", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "RO": { ad: "Romanya", ornek: "B 123 ABC", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "PL": { ad: "Polonya", ornek: "WI 12345", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "S":  { ad: "İsveç", ornek: "ABC 12A", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "N":  { ad: "Norveç", ornek: "EK 12345", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇳🇴", sagBant: false },
+            "DK": { ad: "Danimarka", ornek: "AB 12 345", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "CZ": { ad: "Çekya", ornek: "1AB 2345", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "H":  { ad: "Macaristan", ornek: "AA-BB-123", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "FIN":{ ad: "Finlandiya", ornek: "ABC-123", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "IRL":{ ad: "İrlanda", ornek: "181-D-12345", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "HR": { ad: "Hırvatistan", ornek: "ZG 1234-AB", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇭🇷", sagBant: false },
+            "SRB":{ ad: "Sırbistan", ornek: "BG 123-AB", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇷🇸", sagBant: false },
+            "BIH":{ ad: "Bosna Hersek", ornek: "A12-E-345", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇧🇦", sagBant: false },
+            "MK": { ad: "Kuzey Makedonya", ornek: "SK 1234 AB", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇲🇰", sagBant: false },
+            "AL": { ad: "Arnavutluk", ornek: "AA 123 BB", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇦🇱", sagBant: true, sagMetin: "12" },
+            "SK": { ad: "Slovakya", ornek: "BA 123AB", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "SLO":{ ad: "Slovenya", ornek: "LJ AB-123", bg: "#ffffff", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false },
+            "LUX":{ ad: "Lüksemburg", ornek: "AB 1234", bg: "#ffd700", color: "#111111", solBg: "#003399", solColor: "#ffffff", yildiz: "🇪🇺", sagBant: false }
+        };
+
+        const cezaVeritabani = {
+            "--- TÜRK CEZA KANUNU (TCK) ADLİ TRAFİK SUÇLARI ---": [
+                { metin: "TCK Madde 179/1 - Trafik işaret ve levhalarını bozma/yola engel koyma", tutar: 0, adli: "1 Yıldan 6 Yıla Kadar Hapis Cezası + Adli Para", puan: 20 },
+                { metin: "TCK Madde 179/2 - Trafik güvenliğini kasten tehlikeye sokma (Tehlikeli Sürüş / Drift)", tutar: 0, adli: "3 Aydan 2 Yıla Kadar Hapis (Mahkeme Sevk)", puan: 20 },
+                { metin: "TCK Madde 179/3 - Alkol (1.00 Promil Üzeri) veya Uyuşturucu ile Araç Kullanmak", tutar: 9267, adli: "2 Yıla Kadar Hapis + 6 Ay Ehliyete El Koyma", puan: 20 },
+                { metin: "TCK Madde 180 - Trafik ve ulaşım güvenliğini taksirle tehlikeye sokma", tutar: 0, adli: "3 Aydan 3 Yıla Kadar Hapis Cezası", puan: 15 },
+                { metin: "TCK Madde 204/1 - Resmî belgede sahtecilik (Sahte Plaka / Ruhsat / Ehliyet)", tutar: 46392, adli: "2 Yıldan 5 Yıla Kadar Hapis Cezası", puan: 20 },
+                { metin: "TCK Madde 85/1 - Taksirle ölüme neden olma (Ölümlü Trafik Kazası)", tutar: 0, adli: "2 Yıldan 6 Yıla Kadar Hapis (Savcılık Sevk)", puan: 20 },
+                { metin: "TCK Madde 89/1 - Taksirle yaralamaya neden olma (Yaralamalı Trafik Kazası)", tutar: 0, adli: "3 Aydan 1 Yıla Kadar Hapis / Adli Para", puan: 15 },
+                { metin: "TCK Madde 152/1-a - Kamu malına veya KGYS / EDS altyapısına zarar verme", tutar: 0, adli: "1 Yıldan 4 Yıla Kadar Hapis + Hasar Tazmini", puan: 15 }
+            ],
+            "--- KTK MADDE 20 - 40: TESCİL, PLAKA VE BELGE İŞLEMLERİ ---": [
+                { metin: "Madde 20/1-a - Araç tescil belgesini araçta bulundurmamak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 20/1-b - Tescil belgesini ve plakayı devir tarihinden itibaren 1 saat içinde tescil ettirmemek", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 21/1 - Tescilsiz aracı karayolunda trafiğe çıkarmak", tutar: 9267, adli: "Trafikten Men + Otopark", puan: 20 },
+                { metin: "Madde 23/3-a - Tescil plakasını monte edilmesi gereken yerin dışına (cam önüne vb.) takmak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 23/3-b - Plakanın okunmasını engelleyecek şekilde kirli, harf/sayı silinmiş veya vida atılmış olması", tutar: 3260, adli: "Plaka Düzeltene Kadar Men", puan: 15 },
+                { metin: "Madde 23/3-c - Plakasız araç kullanmak", tutar: 10930, adli: "Trafikten Men", puan: 20 },
+                { metin: "Madde 23/4 - Başka araca tescilli sahte veya ikiz plaka takmak/kullanmak", tutar: 46392, adli: "TCK 204 Sevk + Araç Men", puan: 20 },
+                { metin: "Madde 24 - Tescilli aracı plakasız veya başka tescil plakasıyla kullanmak", tutar: 18679, adli: "Araç Trafikten Men", puan: 20 },
+                { metin: "Madde 25 - Araç üzerinde yapılan teknik değişiklikleri 30 gün içinde tescil kuruluşuna bildirmemek", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 26/1 - İzin almadan araçlarda renk veya teknik değişiklik yapmak", tutar: 993, adli: "Men ve Uygunluk Şartı", puan: 10 },
+                { metin: "Madde 26/2 - Mevzuata aykırı çakar lamba, tepe lambası veya siren sistemi kullanmak", tutar: 9267, adli: "Cihaz Müsaderesi + 30 Gün Men", puan: 20 },
+                { metin: "Madde 28 - Yönetmeliğe aykırı ses, müzik, görüntü ve haberleşme cihazı takmak", tutar: 993, adli: "Cihazın Sökülmesi", puan: 10 },
+                { metin: "Madde 30/1-a - Görüşü engelleyecek aksesuar, koyu renkli cam filmi veya renkli cam kullanmak", tutar: 2167, adli: "Süre Verilerek İhtar", puan: 10 },
+                { metin: "Madde 30/1-b - Bozuk far, patlak stop, çalışmayan sinyal donanımıyla gece trafiğe çıkmak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 30/1-c - Lastikleri diş derinliği yetersiz veya kabzları kopmuş şekilde kullanmak", tutar: 2167, adli: "Güvenli Alana Sevke Kadar Men", puan: 15 },
+                { metin: "Madde 31/1-a - Kış lastiği zorunluluğuna uymamak (Ticari Araçlar)", tutar: 4514, adli: "Seferden Men", puan: 10 },
+                { metin: "Madde 32/3 - Mevzuata aykırı abartı egzoz (gürültülü egzoz) kullanarak çevreyi rahatsız etmek", tutar: 9267, adli: "Egzoz Düzeltilene Kadar Men", puan: 20 },
+                { metin: "Madde 34/a - Muayene süresi geçmiş araçla trafiğe çıkmak (1. Defa)", tutar: 2167, adli: "7 Gün İzinli Men", puan: 10 },
+                { metin: "Madde 34/b - Muayene süresi geçmiş araçla trafiğe çıkmak (Tekrarlı / 2. Defa)", tutar: 4514, adli: "Araç Trafikten Men", puan: 15 },
+                { metin: "Madde 35 - Karayolu yapısına zarar verecek ağırlıkta veya boyutta yükle çıkmak", tutar: 9267, adli: "Yük İndirme / Seferden Men", puan: 20 },
+                { metin: "Madde 36/3-a - Sürücü belgesiz (ehliyetsiz) motorlu araç kullanmak", tutar: 18679, adli: "Araç Sahibine de Aynı Tutar", puan: 20 },
+                { metin: "Madde 36/3-b - Mahkeme veya yetkililerce sürücü belgesi geri alınmışken araç kullanmak", tutar: 18679, adli: "Adli Tahkikat / Mahkeme Sevk", puan: 20 },
+                { metin: "Madde 37 - Sürücü belgesi iptal edilmiş kişilerin araç kullanmasına izin vermek", tutar: 18679, adli: "İdari Para Cezası", puan: 20 },
+                { metin: "Madde 38 - Sürücü kursu dışı yetkisiz kişilere direksiyon eğitimi vermek", tutar: 2167, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 39/1-a - Sürücü belgesi sınıfına uygun olmayan motorlu araç kullanmak", tutar: 9267, adli: "Araç Trafikten Men", puan: 20 },
+                { metin: "Madde 39/2 - Aday sürücülük kurallarına uymayarak belgesi iptal edilecek ihlal yapmak", tutar: 2167, adli: "Belge İptal İşlemi", puan: 15 },
+                { metin: "Madde 40 - Yaş ve sağlık şartlarına uymayan sürücü belgesiyle araç kullanmak", tutar: 2167, adli: "İdari Para Cezası", puan: 10 }
+            ],
+            "--- KTK MADDE 41 - 60: SEYİR, HIZ VE TRAFİK KURALLARI ---": [
+                { metin: "Madde 46/2-a - Trafik işaretlerine, levhalarına ve yer işaretlemelerine uymamak", tutar: 690, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 46/2-b - Aksine bir işaret yoksa şerit izleme kurallarına uymamak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 46/2-c - Sol şeridi sürekli ve gereksiz işgal etmek", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 46/2-d - Tehlikeli tarzda art arda şerit değiştirmek (Makas atmak)", tutar: 9267, adli: "Trafik Güvenliğini Tehlikeye Sokma", puan: 20 },
+                { metin: "Madde 46/2-e - Kamyon ve çekicilerin yasak sollama yapması", tutar: 2167, adli: "İdari Para Cezası", puan: 15 },
+                { metin: "Madde 46/2-f - Otoyollarda emniyet şeridini gereksiz veya izinsiz kullanmak", tutar: 9267, adli: "İdari Para Cezası", puan: 20 },
+                { metin: "Madde 46/2-g - Bölünmüş karayollarında ters yönde araç sürmek", tutar: 9267, adli: "Trafikten Men Riski", puan: 20 },
+                { metin: "Madde 47/1-a - Trafik görevlilerinin ikaz ve işaretlerine uymamak", tutar: 2167, adli: "İdari Para Cezası", puan: 20 },
+                { metin: "Madde 47/1-b - Kırmızı ışık kuralına ve trafik ışık işaretlerine uymamak", tutar: 2167, adli: "1 Yılda 3 Defa Tekrarda Ehliyet İptali", puan: 20 },
+                { metin: "Madde 47/1-c - Yeşil ışık yanmasına rağmen geçiş yapmayan veya korna çalan trafiği engellemek", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 48/5 - 0.50 promil üzerinde alkollü araç kullanmak (1. Defa)", tutar: 9267, adli: "6 Ay Sürücü Belgesine El Koyma", puan: 20 },
+                { metin: "Madde 48/5-2 - 0.50 promil üzerinde alkollü araç kullanmak (2. Defa)", tutar: 11622, adli: "2 Yıl Sürücü Belgesine El Koyma", puan: 20 },
+                { metin: "Madde 48/5-3 - 0.50 promil üzerinde alkollü araç kullanmak (3 ve sonraki)", tutar: 18679, adli: "5 Yıl Sürücü Belgesine El Koyma", puan: 20 },
+                { metin: "Madde 48/6 - Hususi otomobillerde 0.50 promil, diğer araçlarda 0.20 promil üstü alkollü olmak", tutar: 9267, adli: "Sürücü Belgesi Geri Alma", puan: 20 },
+                { metin: "Madde 48/8 - Uyuşturucu veya uyarıcı madde etkisi altındayken araç kullanmak", tutar: 47842, adli: "5 Yıl Ehliyet İptali + TCK 179 Sevk", puan: 20 },
+                { metin: "Madde 48/9 - Alkol veya uyuşturucu tespit cihazını üflemeyi / ölçümü reddetmek", tutar: 26615, adli: "2 Yıl Sürücü Belgesine El Koyma", puan: 20 },
+                { metin: "Madde 49/3 - Ticari araçlarda günlük çalışma ve dinlenme sürelerine (takograf) uymamak", tutar: 2167, adli: "Seferden Men", puan: 15 },
+                { metin: "Madde 50/1 - Hava, yol ve trafik durumuna göre hızını ayarlamamak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 51/2-a - Hız sınırlarını %10'dan %30'a kadar aşmak", tutar: 2167, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 51/2-b - Hız sınırlarını %30'dan %50'ye kadar aşmak", tutar: 4514, adli: "İdari Para Cezası", puan: 15 },
+                { metin: "Madde 51/2-c - Hız sınırlarını %50'den fazla aşmak (Aşırı Hız)", tutar: 9267, adli: "1 Yılda 5 Kere Tekrarda Ehliyet İptali", puan: 15 },
+                { metin: "Madde 52/1-a - Araçlar arasındaki mesafeyi (takip mesafesi) korumamak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 52/1-b - Kol veya kollarla dönüş işaretleri vermeden ani manevra yapmak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 52/1-c - Önündeki aracı yakın takip etmek ve sıkıştırmak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 53/1-a - Kavşaklarda geçiş hakkı kurallarına uymamak", tutar: 993, adli: "İdari Para Cezası", puan: 15 },
+                { metin: "Madde 54/1 - Öndeki aracı sağdan veya hatalı sollamak", tutar: 2167, adli: "İdari Para Cezası", puan: 15 },
+                { metin: "Madde 55 - Dar yollarda karşıdan gelen araçlara geçiş kolaylığı sağlamamak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 56/1-a - Dönemeçlerde ve tepe üstlerinde önündeki aracı geçmek (hatalı sollama)", tutar: 2167, adli: "İdari Para Cezası", puan: 15 },
+                { metin: "Madde 56/1-b - Görüşün kısıtlı olduğu yerlerde tünel ve köprülerde öndeki aracı geçmek", tutar: 2167, adli: "İdari Para Cezası", puan: 15 },
+                { metin: "Madde 57/1-f - Geçiş üstünlüğü olan ambulans, itfaiye ve polis araçlarına yol vermemek", tutar: 993, adli: "İdari Para Cezası", puan: 15 },
+                { metin: "Madde 59 - Okul taşıtlarının 'DUR' işaretini yaktığı halde sollamak veya geçmek", tutar: 2167, adli: "İdari Para Cezası", puan: 20 },
+                { metin: "Madde 60 - Demiryolu hemzemin geçitlerinde kurallara uymamak", tutar: 2167, adli: "İdari Para Cezası", puan: 20 }
+            ],
+            "--- KTK MADDE 61 - 85: DURMA, DURAKLAMA, PARK VE YAYA KURALLARI ---": [
+                { metin: "Madde 61/1-a - Taşıt yolu üzerinde yasak olan yerlerde duraklamak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 61/1-b - Taşıt yolu üzerinde park etmek yasaklanan yerlere park etmek", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 61/1-c - Taşıt yolu üzerinde çift sıra park etmek (İkinci sıra park)", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 61/1-d - Yangın musluklarına 5 metre mesafe içinde park etmek", tutar: 993, adli: "Çekici İşlemi", puan: 10 },
+                { metin: "Madde 61/1-e - Kamu binaları ve hastane giriş/çıkışlarına 15 metre mesafe içinde park etmek", tutar: 993, adli: "Çekici İşlemi", puan: 10 },
+                { metin: "Madde 61/1-f - Alt ve üst geçitler ile köprüler üzerinde park etmek", tutar: 993, adli: "Çekici İşlemi", puan: 10 },
+                { metin: "Madde 61/1-g - Kurum ve kuruluşların giriş/çıkış kapılarına 5 metre mesafe içinde park etmek", tutar: 993, adli: "Çekici İşlemi", puan: 10 },
+                { metin: "Madde 61/1-h - Duraklanan veya park edilen araçların çıkışına engel olacak şekilde park etmek", tutar: 993, adli: "Çekici İşlemi", puan: 10 },
+                { metin: "Madde 61/1-i - Yaya geçitleri ve okul geçitleri üzerine park etmek", tutar: 1986, adli: "Çekici ve Otopark Ücreti", puan: 10 },
+                { metin: "Madde 61/1-j - Bisiklet yolları ve şeritlerine park etmek", tutar: 993, adli: "Çekici İşlemi", puan: 10 },
+                { metin: "Madde 61/1-k - Belirlenmiş duraklara park etmek", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 61/1-l - Yaya yolları ve kaldırımlar üzerine park etmek", tutar: 993, adli: "Çekici İşlemi", puan: 10 },
+                { metin: "Madde 61/1-m - Ücretli park yerlerine (İspark vb.) park edip ücret ödememek", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 61/1-n - Engelli araçları için ayrılmış park yerine park etmek", tutar: 1986, adli: "Çekici ve 2 Kat Ceza", puan: 10 },
+                { metin: "Madde 62 - Park edilen araçların el frenini çekmeden veya stop etmeden bırakılması", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 63 - Gerekli güvenlik tedbirlerini (arka reflektör/üçgen reflektör) almadan durmak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 64/1-a - Geceleyin şehir içinde park lambalarını yakmadan durmak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 64/1-b - Sis farlarını sisli, karlı havalar dışında diğer zamanlarda yakmak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 64/1-c - Uzun farları (akşam/gece) karşıdan gelen sürücülerin gözünü alacak şekilde yakmak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 65/1 - Yükleme kurallarına uymamak (gabari dışı yükleme)", tutar: 4514, adli: "Yük İndirme + Para Cezası", puan: 15 },
+                { metin: "Madde 65/2 - Azami yüklü ağırlığı aşarak (tonaj fazlası) karayoluna çıkmak", tutar: 9267, adli: "Seferden Men", puan: 20 },
+                { metin: "Madde 66 - Bisiklet, motorlu bisiklet ve motosikletleri yaya yollarında sürmek", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 67/1-a - Dönemeçlerde veya kavşaklarda hatalı şerit seçimi yapmak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 67/1-b - Araçtan çöp, sigara izmariti veya eşya atmak", tutar: 993, adli: "Çevre Kanunu Ek Cezası", puan: 10 },
+                { metin: "Madde 67/1-c - Karayolunda el freni çekmek, drift veya spin atmak", tutar: 46392, adli: "60 Gün Ehliyet Geri Alma + Men", puan: 20 },
+                { metin: "Madde 68/1-a - Yayaların trafik kurallarına ve ışıklara uymaması", tutar: 690, adli: "İdari Para Cezası", puan: 0 },
+                { metin: "Madde 69 - Hayvan sürücülerinin karayolunda trafiği tehlikeye düşürmesi", tutar: 690, adli: "İdari Para Cezası", puan: 0 },
+                { metin: "Madde 71 - Otoyollarda mecburi asgari hız sınırının altında araç sürmek", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 72 - Otoyollarda duraklamak, park etmek, mecburi haller dışında durmak", tutar: 2167, adli: "İdari Para Cezası", puan: 15 },
+                { metin: "Madde 73/a - Sürüş esnasında dikkatini yola vermemek (sigara, yemek, makyaj)", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 73/b - Araç sürerken kulaklıkla müzik dinlemek veya yüksek sesle yayın yapmak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 73/c - Seyir halinde cep telefonu veya benzer iletişim cihazı kullanmak", tutar: 2167, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 74/a - Yaya ve okul geçitlerinde yayalara ilk geçiş hakkını vermemek", tutar: 4514, adli: "İdari Para Cezası", puan: 20 },
+                { metin: "Madde 75 - Okul taşıtlarında 'DUR' lambasını yakmadan öğrenci indirmek/bindirmek", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 78/1-a - Emniyet kemeri bulundurulması zorunlu araçlarda kemer takmamak", tutar: 993, adli: "İdari Para Cezası", puan: 15 },
+                { metin: "Madde 78/1-b - Motosiklet ve motorlu bisikletlerde kask / koruma başlığı takmamak", tutar: 993, adli: "İdari Para Cezası", puan: 15 },
+                { metin: "Madde 79 - Motorlu bisiklet ve motosikletlerde koruma gözlüğü takmamak", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 81/1-a - Trafik kazası yerini terk etmek ve kaza mahalline polise bildirmemek", tutar: 4514, adli: "Ehliyet Geçici Geri Alma", puan: 20 },
+                { metin: "Madde 81/1-b - Maddi hasarlı trafik kazasında durmayıp olay yerinden uzaklaşmak", tutar: 2167, adli: "İdari Para Cezası", puan: 20 },
+                { metin: "Madde 84 - Kusurlu olarak yaralamalı veya maddi hasarlı kazaya sebebiyet vermek", tutar: 2167, adli: "Kaza Tespit Tutanağına Göre", puan: 20 },
+                { metin: "Madde 91 - Zorunlu Mali Mesuliyet (Trafik) Sigortası yaptırmamış olmak", tutar: 993, adli: "Araç Men + Otopark", puan: 10 }
+            ],
+            "--- KTK MADDE 90 - 130: DİĞER ÖZEL İDARİ VE DENETİM MADDELERİ ---": [
+                { metin: "Madde 92 - Karayolları Motorlu Araçlar Zorunlu Sigorta poliçesini ibraz edememek", tutar: 993, adli: "İdari Para Cezası", puan: 10 },
+                { metin: "Madde 95 - Karayolu taşıma kanununa aykırı yolcu taşımak (K Yetki Belgesiz)", tutar: 9267, adli: "Ticari Faaliyetten Men", puan: 20 },
+                { metin: "Madde 101 - Araçlarda takograf bulundurmamak veya faal hale getirmemek", tutar: 4514, adli: "Seferden Men", puan: 15 },
+                { metin: "Madde 105 - Tehlikeli madde taşıyan araçların kurallara uymaması", tutar: 9267, adli: "İdari Para Cezası", puan: 20 },
+                { metin: "Madde 116 - Plakaya yazılan trafik idari para cezası tebligat kurallarına uymamak", tutar: 0, adli: "Vergi Dairesi Takibi", puan: 0 },
+                { metin: "Madde 118 - Sürücü belgesi puan aşımı nedeniyle 100 ceza puanını doldurmak", tutar: 2167, adli: "2 Ay Sürücü Belgesi Geri Alma", puan: 20 },
+                { metin: "Madde 123 - Karayolu üzerinde izsiz, hurda veya terk edilmiş araç bırakmak", tutar: 4514, adli: "Çekici ile Otoparka Kaldırma", puan: 10 },
+                { metin: "Madde 128 - Denetimle görevli yetkili personelin dur ikazına uymamak (İhtar", tutar: 2167, adli: "Kovuşturma + Para Cezası", puan: 20 },
+                { metin: "Madde 129 - Yetkisiz kişilerin trafik düzenlemesi yapması veya dur işareti kullanması", tutar: 2167, adli: "İdari Para Cezası", puan: 15 },
+                { metin: "Madde 130 - Trafik güvenliğini tehlikeye düşürecek şekilde hayvan otlatmak veya bırakmak", tutar: 993, adli: "İdari Para Cezası", puan: 10 }
+            ]
+        };
+
+        const polnetAraclar = {
+            "34PGV319": {
+                ulke: "TR",
+                marka: "BMW",
+                model: "i4 M Sport eDrive40",
+                yil: "2025",
+                renk: "Siyah",
+                yakit: "Elektrik",
+                sasi: "WBA73AW08SF987654",
+                motor: "ELEKTRIK-MOT-2025",
+                sahip: "T.C. TİCARET BAKANLIĞI (Resmî Tahsisli Makam)",
+                tescilTarihi: "01.06.2025",
+                tescilSube: "İstanbul Trafik Tescil Şube Md.",
+                kullanim: "Resmî Hizmete Mahsus / Tahsisli Makam Aracı",
+                sigorta: { 
+                    durum: "GEÇERLİ", 
+                    bitis: "01.06.2027", 
+                    sirket: "Allianz Sigorta" 
+                },
+                muayene: { 
+                    durum: "GEÇERLİ", 
+                    bitis: "01.06.2027" 
+                },
+                hukuki: { 
+                    men: false, 
+                    calinti: false, 
+                    haciz: false, 
+                    not: "T.C. Ticaret Bakanlığı merkez teşkilatı resmi tahsisli makam aracı kaydı aktiftir. Geçiş üstünlüğü ve koruma şerhleri işlidir." 
+                }
+            },
+"34HAN848": {
+                ulke: "TR",
+                marka: "BMW",
+                model: "420i M Sport Coupe",
+                yil: "2022",
+                renk: "SİYAH",
+                yakit: "Benzin",
+                sasi: "WBA4Z5C00NF849123",
+                motor: "B48B20A918",
+                sahip: "TUNAHAN ŞAHİN (TC: 348*****10)",
+                tescilTarihi: "21.08.2022",
+                tescilSube: "İstanbul Üsküdar Tescil Büro Md.",
+                kullanim: "Hususi Otomobil (M1)",
+                sigorta: { 
+                    durum: "GEÇERLİ", 
+                    bitis: "21.08.2027", 
+                    sirket: "Allianz Sigorta" 
+                },
+                muayene: { 
+                    durum: "GEÇERLİ", 
+                    bitis: "10.08.2027" 
+                },
+                hukuki: { 
+                    men: false, 
+                    calinti: false, 
+                    haciz: false, 
+                    not: "Araç sicil kaydı tamamen temizdir. Herhangi bir tahsis, şerh, haciz veya arama kaydı bulunmamaktadır." 
+                }
+            },
+
+"34FB3756": {
+                ulke: "TR",
+                marka: "LAND ROVER",
+                model: "Range Rover Sport 3.0 SDV6 HSE",
+                yil: "2019",
+                renk: "SİYAH",
+                yakit: "Benzinli",
+                sasi: "SALWA2V4XKA109842",
+                motor: "SDV6-30-9182",
+                sahip: "AK PARTİ GENEL MERKEZİ (Resmî Tahsisli Makam)",
+                tescilTarihi: "14.05.2026",
+                tescilSube: "Ankara Trafik Tescil Şube Md.",
+                kullanim: "Resmî Kurum / Siyasi Parti Tahsisli Makam Aracı",
+                sigorta: { 
+                    durum: "GEÇERLİ", 
+                    bitis: "14.05.2027", 
+                    sirket: "Anadolu Sigorta" 
+                },
+                muayene: { 
+                    durum: "GEÇERLİ", 
+                    bitis: "04.05.2027" 
+                },
+                hukuki: { 
+                    men: false, 
+                    calinti: false, 
+                    haciz: false, 
+                    not: "AK Parti Genel Merkez Teşkilatı koruma ve tahsisli makam kaydı aktiftir. Emniyet geçiş üstünlüğü protokol şerhleri işlidir." 
+                }
+            },
+            "34ABC789": {
+                ulke: "TR",
+                marka: "RENAULT",
+                model: "Megane Sedan 1.3 TCe Joy",
+                yil: "2020",
+                renk: "FÜME (GRİ)",
+                yakit: "Benzin",
+                sasi: "VF1RFB00865491204",
+                motor: "H5H470129",
+                sahip: "MEHMET ALİ GÜLER (TC: 284*****12)",
+                tescilTarihi: "18.06.2020",
+                tescilSube: "İstanbul Kadıköy Tescil",
+                kullanim: "Hususi Otomobil (M1)",
+                sigorta: { durum: "GEÇERLİ", bitis: "15.08.2027", sirket: "Anadolu Sigorta" },
+                muayene: { durum: "GEÇERLİ", bitis: "24.05.2027" },
+                hukuki: { men: false, calinti: false, haciz: false, not: "Temiz kayıt. Aktif tahkikat bulunmuyor." }
+            },
+            "AA-123-AA": {
+                ulke: "F",
+                marka: "PEUGEOT",
+                model: "3008 GT Line 1.5 BlueHDi",
+                yil: "2023",
+                renk: "SEDEF BEYAZ",
+                yakit: "Dizel",
+                sasi: "VF3MCYHZUPL019842",
+                motor: "DV5RC10294",
+                sahip: "JEAN-LUC MOREAU (Pasaport: 21FR90412)",
+                tescilTarihi: "04.05.2023 (Giriş: İpsala Gümrük Kapısı)",
+                tescilSube: "Fransa Ulusal Taşıt Tescil Sistemi (SIV - Paris)",
+                kullanim: "Yabancı Plakalı Turistik Taşıt",
+                sigorta: { durum: "GEÇERLİ", bitis: "04.05.2027", sirket: "AXA France (Carte Verte / Yeşil Kart)" },
+                muayene: { durum: "GEÇERLİ", bitis: "14.04.2027" },
+                hukuki: { men: false, calinti: false, haciz: false, not: "Yasal geçici ithalat süresi aktif. Gümrük ve Interpol aranması yoktur." }
+            }
+        };
+
+        let sonKesilenCeza = null;
+
+        function panelGoster(tur, butonEl) {
+            butonSeciminiGuncelle(butonEl);
+
+            const baslik = document.getElementById('ekran-baslik');
+            const icerik = document.getElementById('ekran-icerik');
+
+            if (tur === 'vatandas') {
+                baslik.innerText = "POL-NET / MERNİS VATANDAŞ GBT & KİMLİK SORGULAMA SİSTEMİ";
+                icerik.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <span style="font-size:12.5px; font-weight:bold; color:#000000;">T.C. Kimlik Numarası veya İsim Soyisim Giriniz:</span>
+                        <div class="form-satir" style="margin-bottom:8px;">
+                            <input type="text" id="gbt-input" class="gri-input" placeholder="" maxlength="25" autocomplete="off" style="font-size:16px; font-weight:bold; letter-spacing:1px;">
+                            <button class="gri-btn" style="height:44px; padding:0 24px;" onclick="sorgulaVatandas()">SİSTEME GİR</button>
+                        </div>
+                    </div>
+                    <div id="panel-sonuc"></div>
+                `;
+                        } else if (tur === 'ceza') {
+                cezaPaneliniYukle();
+            } else if (tur === 'tutanak') {
+                baslik.innerText = "POL-NET RESMİ TUTANAK YÖNETİMİ & ARŞİV";
+                icerik.innerHTML = `
+                    <div class="kurumsal-kart">
+                        <div class="kart-ust-bar">
+                            <div>
+                                <span style="font-size:15px; font-weight:bold; color:#0f225e ;">GÜNCEL TRAFİK VE ADLİ İŞLEM TUTANAKLARI</span><br>
+                                <span style="font-size:11px; color:#0f225e ;">DEVRİYE BİRİMİ: 34-A-14 | SİSTEM: E-TUTANAK V4.8</span>
+                            </div>
+                            <button class="aksiyon-btn" style="background:#1d3898;" onclick="panelGoster('ceza', document.getElementById('btn-ceza'))">+ YENİ TUTANAK DÜZENLE</button>
+                        </div>
+
+                        <table class="tablo-kurumsal">
+                            <thead>
+                                <tr>
+                                    <th>Seri / Belge No</th>
+                                    <th>Tanzim Tarihi</th>
+                                    <th>Muhatap (TC / Plaka)</th>
+                                    <th>Uygulanan Madde / Konu</th>
+                                    <th>Yaptırım / Tutar</th>
+                                    <th>İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                          
+                            </tbody>
+                        </table>
+                        
+                        <div style="font-size:11.5px; color:#64748b; margin-top:8px;">
+                            * Düzenlenen tüm tutanaklar UYAP ve Gelir İdaresi Başkanlığı (GİB) sistemlerine anlık senkronizedir.
+                        </div>
+                    </div>
+                `;
+            } else if (tur === 'bildirimler') {
+                baslik.innerText = "POL-NET 112 ÇAĞRI VE TELSİZ ANONS BİLDİRİMLERİ";
+                icerik.innerHTML = `
+                    <div class="kurumsal-kart">
+                        <div class="kart-ust-bar">
+                            <div>
+                                <span style="font-size:15px; font-weight:bold; color:#1d3898;">CANLI DEVRE VE ASAYİŞ BİLDİRİM AKIŞI</span><br>
+                                <span style="font-size:11px; color:#64748b;">FREKANS: KANAL 34-B | İSTASYON: İSTANBUL KOMUTA KONTROL</span>
+                            </div>
+                            <span class="rozet-yesil">TELSİZ AĞI AKTİF</span>
+                        </div>
+
+                        <!-- 1. ACİL ANONS -->
+                        <div class="bildirim-ogesi acil">
+                            <div class="bildirim-ust">
+                                <span class="bildirim-baslik" style="color:#c00000;">🚨 112 ACİL KOD-3 / ÇALINTI ARAÇ TAKİBİ</span>
+                                <span class="bildirim-zaman">15:18 (3 Dk Önce)</span>
+                            </div>
+                            <div class="bildirim-metin">
+                                <strong>35 HIRSIZ</strong> plakalı beyaz Tofaş Şahin marka araç TEM Otoyolu İkitelli ayrımında KGYS kameralarınca tespit edilmiştir. Çevredeki devriye ekiplerinin kontrollü olarak güzergahı kapatması talep edilmektedir.
+                            </div>
+                        </div>
+
+                        <!-- 2. UYARI ANONS -->
+                        <div class="bildirim-ogesi uyari">
+                            <div class="bildirim-ust">
+                                <span class="bildirim-baslik" style="color:#d97706;">⚠️ YAKALAMALI HACİZ ŞERHİ ANONS</span>
+                                <span class="bildirim-zaman">14:45 (36 Dk Önce)</span>
+                            </div>
+                            <div class="bildirim-metin">
+                                <strong>06 KOR 44</strong> plakalı siyah BMW marka araç hakkında 14. İcra Dairesi yakalamalı haciz kararı mevcuttur. Görüldüğü noktada bağlanarak yediemin otoparkına teslimi zorunludur.
+                            </div>
+                        </div>
+
+                        <!-- 3. BİLGİLENDİRME BİLDİRİMİ -->
+                        <div class="bildirim-ogesi">
+                            <div class="bildirim-ust">
+                                <span class="bildirim-baslik" style="color:#1d3898;">ℹ️ RADAR VE HIZ DENETİMİ BİLGİLENDİRMESİ</span>
+                                <span class="bildirim-zaman">13:30</span>
+                            </div>
+                            <div class="bildirim-metin">
+                                Sektör 4 Basın Ekspres yolu güzergahında mobil radar aracı konumlandırılmıştır. Ekiplerin bölgedeki akışı yavaşlatmadan seyir halinde denetime devam etmesi bildirilmiştir.
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+                            <button class="aksiyon-btn" style="background:#475569;" onclick="alert('Tüm telsiz anonsları okundu olarak işaretlendi.')">TÜMÜNÜ OKUNDU SAY</button>
+                            <button class="aksiyon-btn" style="background:#1d3898;" onclick="alert('112 Komuta Merkezine GPS teyidi ve durum raporu iletildi.')">📡 MERKEZE TEYİT GEÇ</button>
+                        </div>
+                    </div>
+                `;
+            } else if (tur === 'ayarlar') {
+                baslik.innerText = "POL-NET TABLET SİSTEM VE TERMİNAL AYARLARI";
+                icerik.innerHTML = `
+                    <div class="kurumsal-kart">
+                        <div class="kart-ust-bar">
+                            <div>
+                                <span style="font-size:15px; font-weight:bold; color:#1d3898;">TERMİNAL YAPILANDIRMASI & DONANIM DENETİMİ</span><br>
+                                <span style="font-size:11px; color:#64748b;">CİHAZ SERİ NO: EGM-TAB-849201 | SÜRÜM: PolNet Mobile OS v4.2.1-SEC</span>
+                            </div>
+                            <span class="rozet-mavi">VPN: ŞİFRELİ (IPSec)</span>
+                        </div>
+
+                        <!-- 1. AĞ VE POLNET GÜVENLİK AYARLARI -->
+                        <div class="ayar-bolum-baslik">Ağ ve Pol-Net VPN Bağlantısı</div>
+                        <div class="ayar-satiri">
+                            <div class="ayar-bilgi">
+                                <span class="ayar-ad">EGM Güvenli APN Hattı</span>
+                                <span class="ayar-aciklama">Mobil şebeke üzerinden İçişleri Bakanlığı kapalı ağına bağlantı</span>
+                            </div>
+                            <div class="ayar-kontrol">
+                                <select style="font-weight:bold;">
+                                    <option>EGM-SECURE-APN (Öncelikli 4.5G)</option>
+                                    <option>POLNET-YEDEK-DATA (Acil Durum)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="ayar-satiri">
+                            <div class="ayar-bilgi">
+                                <span class="ayar-ad">Kriptografik Anahtar Yenileme</span>
+                                <span class="ayar-aciklama">256-bit AES uçtan uca telsiz veri şifreleme sertifikası</span>
+                            </div>
+                            <div class="ayar-kontrol">
+                                <button class="gri-btn" style="padding:6px 14px; font-size:11px;" onclick="alert('Pol-Net kripto sertifikaları başarıyla güncellendi.')">SERTİFİKA YENİLE</button>
+                            </div>
+                        </div>
+
+                        <!-- 2. DONANIM VE BİYOMETRİK AYARLARI -->
+                        <div class="ayar-bolum-baslik">Donanım ve Sensör Kalibrasyonu</div>
+                        <div class="ayar-satiri">
+                            <div class="ayar-bilgi">
+                                <span class="ayar-ad">Ekran Parlaklığı ve Gece Modu</span>
+                                <span class="ayar-aciklama">Araç içi kullanım için parlaklık seviyesini optimize eder</span>
+                            </div>
+                            <div class="ayar-kontrol">
+                                <input type="range" min="20" max="100" value="85" style="width:140px;" onchange="alert('Ekran parlaklığı ayarlandı: %' + this.value)">
+                            </div>
+                        </div>
+
+                        <div class="ayar-satiri">
+                            <div class="ayar-bilgi">
+                                <span class="ayar-ad">Biyometrik AFIS Parmak İzi Sensörü</span>
+                                <span class="ayar-aciklama">Optik cam yüzey temizliği ve hassasiyet testi</span>
+                            </div>
+                            <div class="ayar-kontrol">
+                                <button class="gri-btn" style="background:#475569; padding:6px 14px; font-size:11px;" onclick="alert('Optik biyometrik tarayıcı kalibre edildi: Durum %100 Hazır.')">TEST ET</button>
+                            </div>
+                        </div>
+
+                        <div class="ayar-satiri">
+                            <div class="ayar-bilgi">
+                                <span class="ayar-ad">Çevrimdışı (Offline) Veri Önbelleği</span>
+                                <span class="ayar-aciklama">Şebeke kesintilerinde yerel GBT ve aranan şahıs kütüğü senkronizasyonu</span>
+                            </div>
+                            <div class="ayar-kontrol">
+                                <button class="gri-btn" style="background:#138808; padding:6px 14px; font-size:11px;" onclick="alert('Yerel veritabanı senkronize edildi. Son kontrol: 2026/09/02.')">ŞİMDİ SENKRONİZE ET</button>
+                            </div>
+                        </div>
+
+                        <!-- ALT BİLGİ VE OTURUM KAPATMA -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; border-top:1px solid #e2e8f0; padding-top:12px;">
+                            <span style="font-size:11.5px; color:#64748b;">GÖREVLİ MEMUR SİCİLİ: <strong>#489214</strong> (GİRİŞ YAPILDI)</span>
+                            <button class="aksiyon-btn" style="background:#c00000;" onclick="if(confirm('Tablet oturumu kapatılarak kilit ekranına dönülecektir. Onaylıyor musunuz?')) { varsayilanaDon(); }">OTURUMU GÜVENLİ KAPAT</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Tutanak listesinden doğrudan resmi evrak açma
+        function ornekTutanakGoster(sahis, madde, tutar, seriNo) {
+            sonKesilenCeza = {
+                sahis: sahis,
+                madde: madde,
+                tutar: tutar,
+                indirim: "(Tebliğden itibaren 1 ay içinde %25 indirim uygulanır)",
+                adli: "Trafik İdari Para Cezası",
+                puan: 20,
+                seriNo: seriNo,
+                tarihSaat: `02.09.2026 - ${document.getElementById('saat-kutusu').innerText}`
+            };
+            pdfGoster();
+        }
+
+        // ==========================================
+        // GELİŞMİŞ VATANDAŞ / BİYOMETRİK SORGULAMA İŞLEVİ
+        // ==========================================
+        function sorgulaVatandas() {
+            let tcGiris = document.getElementById('gbt-input').value.trim();
+            const sonucAlani = document.getElementById('panel-sonuc');
+
+            if (!tcGiris) {
+                alert("Lütfen bir T.C. Kimlik Numarası giriniz.");
+                return;
+            }
+
+            let kisi = mernisVatandaslar[tcGiris];
+
+            if (!kisi) {
+                const uretilenTC = (tcGiris.length === 11 && !isNaN(tcGiris)) ? tcGiris : ("3" + Math.floor(1000000000 + Math.random() * 9000000000));
+                kisi = {
+                    tc: uretilenTC,
+                    ad: "MURAT",
+                    soyad: "DEMİRTAŞ",
+                    babaAdi: "KEMAL",
+                    anaAdi: "HATİCE",
+                    dogumYeri: "KADIKÖY / İSTANBUL",
+                    dogumTarihi: "08.05.1991",
+                    medeniHal: "EVLİ",
+                    din: "İSLAM",
+                    cinsiyet: "ERKEK",
+                    nufusIl: "İSTANBUL",
+                    nufusIlce: "FATİH",
+                    ciltNo: "0031",
+                    aileSiraNo: "0082",
+                    bireySiraNo: "04",
+                    kanGrubu: "B Rh(+)",
+                    boyKilo: "179 cm / 81 kg",
+                    foto: "",
+                    biyometrik: {
+                        parmakIziKodu: "AFIS-TR-" + Math.floor(10000000 + Math.random() * 90000000),
+                        retinaKaydi: "MEVCUT (Sürüm 3.4)",
+                        yuzTanimaOrani: "%97.8 Doğrulandı",
+                        dnaProfili: "KAYITLI DEĞİL"
+                    },
+                    ehliyet: "B (Geçerli)",
+                    uavtAdres: "Akşemsettin Mah. Fevzipaşa Cad. No: 112/5 Fatih / İSTANBUL (UAVT Kodu: 18491028)",
+                    adli: {
+                        durum: "TEMİZ (ARANMA KAYDI YOK)",
+                        rozetClass: "rozet-yesil",
+                        icerik: "UYAP Tahkikat: Şahsın aranma, adli kontrol veya infaz dosyası bulunmamaktadır."
+                    },
+                    silahRuhsati: "YOK",
+                    pasaport: "BORDO (Umuma Mahsus) - Aktif"
+                };
+            }
+
+            const adliKutuClass = kisi.adli.rozetClass === "rozet-kirmizi" ? "adli-tahkikat-kutusu" : "adli-temiz-kutusu";
+
+            let fotoHTML = kisi.foto ? 
+                `<img src="${kisi.foto}" alt="Biyometrik Vesikalık" class="vesikalik-foto" onerror="this.outerHTML='<span class=\'vesikalik-siluet\'>👤</span>';">` : 
+                `<span class="vesikalik-siluet">👤</span>`;
+
+            sonucAlani.innerHTML = `
+                <div class="vatandas-karti">
+                    <div class="vatandas-ust-baslik">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="font-size:18px; font-weight:900; color:#1d3898; letter-spacing:0.5px;">${kisi.ad} ${kisi.soyad}</span>
+                            <span style="font-family:monospace; font-size:14px; background:#eef2f7; padding:2px 8px; border-radius:3px; font-weight:bold; color:#333; border:1px solid #ccd5e3;">TC: ${kisi.tc}</span>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <span class="${kisi.adli.rozetClass}">${kisi.adli.durum}</span>
+                            <span class="rozet-mavi">MERNİS DOĞRULANDI</span>
+                        </div>
+                    </div>
+
+                    <div class="vatandas-govde">
+                        <div class="biyometrik-profil-kutusu">
+                            <div class="vesikalik-cerceve" title="Biyometrik Vesikalık Fotoğraf">
+                                ${fotoHTML}
+                                <div class="yuz-tarama-cizgisi"></div>
+                                <span style="position:absolute; bottom:3px; font-size:9px; background:rgba(0,0,0,0.65); color:#fff; padding:1px 5px; border-radius:2px;">BİYOMETRİK</span>
+                            </div>
+
+                            <div class="parmak-izi-paneli">
+                                <div class="parmak-izi-ikon">ᯤ</div>
+                                <strong>AFIS PARMAK İZİ</strong><br>
+                                <span style="color:#555; font-size:10px;">${kisi.biyometrik.parmakIziKodu}</span><br>
+                                <span style="color:#138808; font-weight:bold; font-size:10.5px;">✓ 10 Parmak Tam Kayıt</span>
+                            </div>
+
+                            <div style="font-size:11px; color:#444; width:100%; text-align:left; line-height:1.5;">
+                                <div><strong>Kan Grubu:</strong> <span style="color:#c00000; font-weight:bold;">${kisi.kanGrubu}</span></div>
+                                <div><strong>Boy / Kilo:</strong> ${kisi.boyKilo}</div>
+                                <div><strong>Yüz Eşleşme:</strong> ${kisi.biyometrik.yuzTanimaOrani}</div>
+                            </div>
+                        </div>
+
+                        <div class="vatandas-tablolar">
+                            <div class="alt-bolum-baslik">Nüfus ve Aile Kütüğü Bilgileri (MERNİS)</div>
+                            <table class="bilgi-grid">
+                                <tr>
+                                    <td class="etiket">Baba Adı:</td>
+                                    <td class="deger">${kisi.babaAdi}</td>
+                                    <td class="etiket">Ana Adı:</td>
+                                    <td class="deger">${kisi.anaAdi}</td>
+                                </tr>
+                                <tr>
+                                    <td class="etiket">Doğum Yeri / Tarihi:</td>
+                                    <td class="deger">${kisi.dogumYeri} - ${kisi.dogumTarihi}</td>
+                                    <td class="etiket">Cinsiyet / Medeni Hal:</td>
+                                    <td class="deger">${kisi.cinsiyet} / ${kisi.medeniHal}</td>
+                                </tr>
+                                <tr>
+                                    <td class="etiket">Kayıtlı İl / İlçe:</td>
+                                    <td class="deger">${kisi.nufusIl} / ${kisi.nufusIlce}</td>
+                                    <td class="etiket">Cilt / Aile / Birey Sıra:</td>
+                                    <td class="deger">${kisi.ciltNo} / ${kisi.aileSiraNo} / ${kisi.bireySiraNo}</td>
+                                </tr>
+                                <tr>
+                                    <td class="etiket">Sürücü Belgesi:</td>
+                                    <td class="deger">${kisi.ehliyet}</td>
+                                    <td class="etiket">Pasaport / Silah:</td>
+                                    <td class="deger">${kisi.pasaport} | Silah: ${kisi.silahRuhsati}</td>
+                                </tr>
+                            </table>
+
+                            <div class="alt-bolum-baslik">Yerleşim Yeri (MERNİS / UAVT Adres Kayıt Sistemi)</div>
+                            <div class="uavt-adres-kutusu">
+                                📍 <strong>MERNİS Birincil İkamet Adresi:</strong><br>
+                                ${kisi.uavtAdres}
+                            </div>
+
+                            <div class="alt-bolum-baslik">UYAP Adli Sicil ve Asayiş GBT Kaydı</div>
+                            <div class="${adliKutuClass}">
+                                ${kisi.adli.icerik}
+                            </div>
+
+                            <div style="display:flex; gap:10px; margin-top:4px;">
+                                <button class="gri-btn" style="background-color:#e00000; font-size:12px;" onclick="sahsaCezaBagla('${kisi.tc} - ${kisi.ad} ${kisi.soyad}')">🚨 BU ŞAHSA CEZA DÜZENLE</button>
+                                <button class="gri-btn" style="background-color:#1d3898; font-size:12px;" onclick="alert('${kisi.tc} nolu vatandaşın detaylı GBT tahkikat evrakı Mobil Yazıcıya aktarıldı.')">📄 GBT TUTANAĞI ÇIKAR</button>
+                                <button class="gri-btn" style="background-color:#444; font-size:12px;" onclick="alert('${kisi.tc} T.C. kimlikli şahsın adres teyidi devriye birimine iletildi.')">📡 MERKEZE BİLDİR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function sahsaCezaBagla(sahisMetni) {
+            const btnCeza = document.getElementById('btn-ceza');
+            butonSeciminiGuncelle(btnCeza);
+            cezaPaneliniYukle(sahisMetni);
+        }
+
+        function plakaUlkesiniGuncelle(kod) {
+            const st = ulkePlakaStandartlari[kod] || ulkePlakaStandartlari["TR"];
+            const kapsayici = document.getElementById('plakaKapsayici');
+            const solBant = document.getElementById('euroSolBant');
+            const yildiz = document.getElementById('euroYildiz');
+            const kodMetin = document.getElementById('euroKodMetin');
+            const input = document.getElementById('plaka-input');
+            const sagBant = document.getElementById('plakaSagBant');
+            const sagMetin = document.getElementById('plakaSagBantMetin');
+
+            kodMetin.innerText = kod;
+            yildiz.innerText = st.yildiz;
+            solBant.style.backgroundColor = st.solBg;
+            solBant.style.color = st.solColor;
+
+            kapsayici.style.backgroundColor = st.bg;
+            input.style.color = st.color;
+            input.placeholder = st.ornek;
+
+            if (st.sagBant) {
+                sagBant.style.display = "flex";
+                sagBant.style.backgroundColor = st.solBg;
+                sagMetin.innerText = st.sagMetin || "01";
+            } else {
+                sagBant.style.display = "none";
+            }
+        }
+
+       function cezaPaneliniYukle(otomatikMuhatap = "") {
+            const baslik = document.getElementById('ekran-baslik');
+            const icerik = document.getElementById('ekran-icerik');
+            baslik.innerText = "CEZA TUTANAĞI DÜZENLE";
+
+            icerik.innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:14px; max-width:700px;">
+                    <div style="font-size:14px; font-weight:bold; color:#111; margin-bottom:4px;">İşlem Türü Seçiniz:</div>
+                    <div style="display:flex; gap:12px;">
+                        <button class="gri-btn" style="flex:1; height:50px; background:#0f225e;" onclick="cezaFormunuAc('arac')">Araç Plakasına Ceza Gir</button>
+                        <button class="gri-btn" style="flex:1; height:50px; background:#0f225e;" onclick="cezaFormunuAc('vatandas')">T.C. Kimlik Numarasına Ceza Gir</button>
+                    </div>
+                </div>
+                <div id="panel-sonuc"></div>
+            `;
+        }
+
+        function cezaFormunuAc(tur) {
+            const baslik = document.getElementById('ekran-baslik');
+            const icerik = document.getElementById('ekran-icerik');
+            
+            let etiketAdi = (tur === 'arac') ? "Araç Plakası Giriniz:" : "T.C. Kimlik Numarası Giriniz:";
+            let placeholderAdi = (tur === 'arac') ? "Örn: 34 PGV 319" : "11 Haneli T.C. Kimlik No";
+            baslik.innerText = (tur === 'arac') ? "ARAÇ PLAKASINA CEZA DÜZENLE" : "T.C. KİMLİK NUMARASINA CEZA DÜZENLE";
+
+            icerik.innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:12px; max-width:700px;">
+                    <button onclick="cezaPaneliniYukle()" style="background:none; border:none; color:#1d3898; font-weight:bold; cursor:pointer; text-align:left; padding:0; margin-bottom: -5px;">← Geri Dön (İşlem Tipi Seçimi)</button>
+                    
+                    <label style="font-size:13px; font-weight:bold; color:#000000;">${etiketAdi}</label>
+                    <input type="text" id="ceza-sahis" class="gri-input" style="max-width:100%;" placeholder="${placeholderAdi}" value="">
+                    
+                    <button class="gri-btn" style="background-color: #0f225e; height:45px; margin-top: 6px;" onclick="cezaMaddeleriniGoster()">SİSTEME GİR</button>
+                </div>
+                <div id="panel-sonuc"></div>
+            `;
+        }
+
+        function cezaMaddeleriniGoster() {
+            const girilenDeger = document.getElementById('ceza-sahis').value.trim();
+            if (!girilenDeger) {
+                alert("Lütfen ilgili alanın girişini yapınız.");
+                return;
+            }
+
+            let cezaSecenekleriHTML = "";
+            for (const grupAdi in cezaVeritabani) {
+                cezaSecenekleriHTML += `<optgroup label="${grupAdi}">`;
+                cezaVeritabani[grupAdi].forEach((madde, index) => {
+                    cezaSecenekleriHTML += `<option value="${grupAdi}___${index}">${madde.metin} (${madde.tutar > 0 ? madde.tutar.toLocaleString('tr-TR') + ' TL' : 'Adli İşlem'})</option>`;
+                });
+                cezaSecenekleriHTML += `</optgroup>`;
+            }
+
+            const simdi = new Date();
+            const tarihStr = `${String(simdi.getDate()).padStart(2,'0')}.${String(simdi.getMonth()+1).padStart(2,'0')}.${simdi.getFullYear()} - ${document.getElementById('saat-kutusu').innerText}`;
+
+            const sonucAlani = document.getElementById('panel-sonuc');
+            sonucAlani.innerHTML = `
+                <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 16px; margin-top: 15px; font-size: 13px;">
+                    <div style="font-weight: 800; color: #0f225e; border-bottom: 2px solid #0f225e; padding-bottom: 6px; margin-bottom: 12px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;">
+                        <span>📋 Resmî Tutanak Veri Giriş ve Denetim Paneli</span>
+                        <span style="font-size: 11px; background: #1d3898; color: #fff; padding: 2px 6px; border-radius: 3px;"></span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                        <div>
+                            <label style="font-weight: bold; color: #334155; display: block; margin-bottom: 4px;">Tanzim Tarihi / Saati:</label>
+                            <input type="text" class="gri-input" style="width: 100%; max-width: 100%; background: #e2e8f0; font-weight: bold; color: #111;" value="${tarihStr}" readonly>
+                        </div>
+                        <div>
+                            <label style="font-weight: bold; color: #334155; display: block; margin-bottom: 4px;">Görevli Ekip / Sicil:</label>
+                            <input type="text" class="gri-input" style="width: 100%; max-width: 100%; background: #e2e8f0; font-weight: bold; color: #111;" value="34-A-14 / Sicil: 489214" readonly>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-weight: bold; color: #334155; display: block; margin-bottom: 4px;">Muhatap (Plaka / T.C. Kimlik):</label>
+                        <input type="text" class="gri-input" style="width: 100%; max-width: 100%; background: #e2e8f0; font-weight: bold; color: #b91c1c;" value="${girilenDeger.toUpperCase()}" readonly>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-weight: bold; color: #334155; display: block; margin-bottom: 4px;">İhlal Edilen TCK / KTK Trafik Maddesi (${Object.values(cezaVeritabani).flat().length} Seçenek):</label>
+                        <select id="ceza-sebep" class="mavi-select-bar" style="width: 100%;">
+                            ${cezaSecenekleriHTML}
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="font-weight: bold; color: #334155; display: block; margin-bottom: 4px;">Olay Yeri / Güzergah Açıklaması (Opsiyonel):</label>
+                        <input type="text" id="ceza-aciklama" class="gri-input" style="width: 100%; max-width: 100%;"">
+                    </div>
+
+                    <button class="gri-btn" style="background-color:#e00000; width:100%; height:48px; font-size:15px; font-weight:bold; border-radius:3px; cursor:pointer;" onclick="cezaKes()">
+                        🚨 RESMİ CEZA TUTANAĞINI ONAYLA VE OLUŞTUR
+                    </button>
+                </div>
+            `;
+        }
+
+        function cezaKes() {
+            const shs = document.getElementById('ceza-sahis').value.trim() || "34 PLK 34";
+            const val = document.getElementById('ceza-sebep').value;
+            const [g, idx] = val.split("___");
+            const mad = cezaVeritabani[g][parseInt(idx)];
+            const seri = "TR-" + Math.floor(100000 + Math.random() * 900000);
+            const tutarStr = mad.tutar > 0 ? mad.tutar.toLocaleString('tr-TR') + " TL" : "Adli Sevk";
+
+            sonKesilenCeza = { 
+                sahis: shs, 
+                madde: mad.metin, 
+                tutar: tutarStr, 
+                adli: mad.adli, 
+                puan: mad.puan, 
+                seriNo: seri, 
+                tarihSaat: new Date().toLocaleString() 
+            };
+
+            document.getElementById('panel-sonuc').innerHTML = `
+                <div class="sonuc-kutusu" style="border-left:5px solid #e00000; margin-top:15px;">
+                    <h4 style="color:#e00000; margin-bottom:6px;">TUTANAK OLUŞTURULDU (${seri})</h4>
+                    <p><strong>Muhatap:</strong> ${shs}</p>
+                    <p><strong>Madde:</strong> ${mad.metin}</p>
+                    <p><strong>Tutar:</strong> <span style="color:#b10000; font-weight:bold;">${tutarStr}</span></p>
+                    <button class="gri-btn" style="margin-top:10px; background:#1d3898;" onclick="pdfGoster()">📄 PDF ÖNİZLEME & YAZDIR</button>
+                </div>
+            `;
+        }
+
+        function sorgulaPlaka() {
+            const secilenUlkeKodu = document.getElementById('plakaUlkeSelect').value;
+            const st = ulkePlakaStandartlari[secilenUlkeKodu] || ulkePlakaStandartlari["TR"];
+            let hamPlaka = document.getElementById('plaka-input').value.trim().toUpperCase();
+            let hamSasi = document.getElementById('sasi-input').value.trim().toUpperCase();
+            const sonucAlani = document.getElementById('panel-sonuc');
+
+            if (!hamPlaka && !hamSasi) {
+                alert("Lütfen bir Plaka Numarası veya Şasi No giriniz.");
+                return;
+            }
+
+            let plakaAnahtar = hamPlaka.replace(/\s+/g, '');
+            let arac = polnetAraclar[hamPlaka] || polnetAraclar[plakaAnahtar];
+
+            if (!arac && hamSasi) {
+                for (const key in polnetAraclar) {
+                    if (polnetAraclar[key].sasi.toUpperCase() === hamSasi) {
+                        arac = polnetAraclar[key];
+                        hamPlaka = key;
+                        break;
+                    }
+                }
+            }
+
+            if (!arac) {
+                const uretilenSasi = hamSasi || ("VF3" + secilenUlkeKodu + Math.floor(100000000 + Math.random() * 900000000));
+                const yabanciMi = (secilenUlkeKodu !== "TR");
+
+                let ornekMarka = "FORD";
+                let ornekModel = "Focus 1.5 TDCi Titanium";
+                if (secilenUlkeKodu === "F") { ornekMarka = "PEUGEOT"; ornekModel = "3008 GT Line 1.5 BlueHDi"; }
+                else if (secilenUlkeKodu === "D") { ornekMarka = "BMW"; ornekModel = "320i Sedan M Sport"; }
+                else if (secilenUlkeKodu === "NL") { ornekMarka = "VOLVO"; ornekModel = "XC40 Recharge Pure"; }
+
+                arac = {
+                    ulke: secilenUlkeKodu,
+                    marka: ornekMarka,
+                    model: ornekModel,
+                    yil: "2023",
+                    renk: yabanciMi ? "GRİ METALLIC" : "BEYAZ",
+                    yakit: "Dizel / Hibrit",
+                    sasi: uretilenSasi,
+                    motor: "ENG" + Math.floor(100000 + Math.random() * 900000),
+                    sahip: yabanciMi ? `YABANCI SÜRÜCÜ (${st.ad} Pasaport No: C${Math.floor(10000000 + Math.random()*90000000)})` : "AHMET YILMAZ (TC: 312*****40)",
+                    tescilTarihi: yabanciMi ? `15.03.2023 (Giriş: Kapıkule Mülki İdare)` : "11.02.2020 (İstanbul Tescil)",
+                    tescilSube: yabanciMi ? `${st.ad} Ulusal Taşıt Tescil Otoritesi` : "İstanbul Trafik Tescil Şb.",
+                    kullanim: yabanciMi ? "Yabancı Plakalı Geçici İthal Taşıt (Turistik Kolaylıklar)" : "Hususi Otomobil (M1)",
+                    sigorta: {
+                        durum: "GEÇERLİ",
+                        bitis: "15.11.2027",
+                        sirket: yabanciMi ? `Carte Verte / Uluslararası Yeşil Kart Poliçesi` : "Allianz Sigorta"
+                    },
+                    muayene: { durum: "GEÇERLİ", bitis: "19.01.2027" },
+                    hukuki: {
+                        men: false,
+                        calinti: false,
+                        haciz: false,
+                        not: yabanciMi ? `Aracın Türkiye'de kalış süresi yasal sınırlar dahilindedir. Interpol çalıntı kaydı bulunmamaktadır.` : "Trafik sicil kaydı temiz."
+                    }
+                };
+            }
+
+            let menRozeti = arac.hukuki.men ? `<span class="rozet-kirmizi">TRAFİKTEN MEN</span>` : `<span class="rozet-yesil">TRAFİĞE UYGUN</span>`;
+            let calintiRozeti = arac.hukuki.calinti ? `<span class="rozet-kirmizi">ÇALINTI / INTERPOL İHBARI</span>` : ``;
+            let hacizRozeti = arac.hukuki.haciz ? `<span class="rozet-sari">HACİZLİ / YAKALAMALI</span>` : ``;
+            let ulkeRozeti = `<span class="rozet-mavi">${st.ad.toUpperCase()} (${secilenUlkeKodu})</span>`;
+            let sigortaRozeti = arac.sigorta.durum === "GEÇERLİ" ? `<span class="rozet-yesil">SİGORTA AKTİF</span>` : `<span class="rozet-kirmizi">SİGORTASIZ</span>`;
+            let muayeneRozeti = arac.muayene.durum === "GEÇERLİ" ? `<span class="rozet-yesil">MUAYENE GEÇERLİ</span>` : `<span class="rozet-kirmizi">MUAYENESİZ</span>`;
+
+            const sagEkstraRozet = st.sagBant ? `<span style="background:${st.solBg}; color:#fff; font-size:11px; padding:4px 6px; font-weight:bold; border-left:1px solid #111;">${st.sagMetin || '75'}</span>` : '';
+
+            sonucAlani.innerHTML = `
+                <div class="arac-karti">
+                    <div class="arac-karti-ust">
+                        <div style="display:inline-flex; align-items:center; border:2px solid #111; border-radius:4px; font-weight:800; font-size:17px; background:${st.bg}; color:${st.color}; overflow:hidden;">
+                            <span style="background:${st.solBg}; color:${st.solColor}; font-size:12px; padding:4px 7px; font-weight:bold;">${secilenUlkeKodu}</span>
+                            <span style="padding:4px 12px; letter-spacing:1px; font-family:monospace;">${hamPlaka || arac.sasi}</span>
+                            ${sagEkstraRozet}
+                        </div>
+                        <div class="durum-etiketleri">
+                            ${ulkeRozeti}
+                            ${calintiRozeti}
+                            ${hacizRozeti}
+                            ${menRozeti}
+                            ${sigortaRozeti}
+                            ${muayeneRozeti}
+                        </div>
+                    </div>
+
+                    <table class="arac-bilgi-tablosu">
+                        <tr>
+                            <td class="alan-adi">Kayıtlı Ülke & Menşei:</td>
+                            <td><strong>${st.ad} (${secilenUlkeKodu})</strong></td>
+                            <td class="alan-adi">Renk / Yakıt:</td>
+                            <td>${arac.renk} / ${arac.yakit}</td>
+                        </tr>
+                        <tr>
+                            <td class="alan-adi">Marka / Model:</td>
+                            <td><strong>${arac.marka}</strong> - ${arac.model} (${arac.yil})</td>
+                            <td class="alan-adi">Kullanım Amacı:</td>
+                            <td>${arac.kullanim}</td>
+                        </tr>
+                        <tr>
+                            <td class="alan-adi">Ruhsat Sahibi:</td>
+                            <td><strong>${arac.sahip}</strong></td>
+                            <td class="alan-adi">Muayene Bitiş:</td>
+                            <td>${arac.muayene.bitis} (${arac.muayene.durum})</td>
+                        </tr>
+                        <tr>
+                            <td class="alan-adi">Şasi Numarası (VIN):</td>
+                            <td><code style="font-weight:bold; color:#1d3898;">${arac.sasi}</code></td>
+                            <td class="alan-adi">Motor Numarası:</td>
+                            <td><code>${arac.motor}</code></td>
+                        </tr>
+                        <tr>
+                            <td class="alan-adi">Tescil / Giriş Detayı:</td>
+                            <td>${arac.tescilTarihi}</td>
+                            <td class="alan-adi">Yetkili Tescil İdaresi:</td>
+                            <td>${arac.tescilSube}</td>
+                        </tr>
+                        <tr>
+                            <td class="alan-adi">Trafik Sigortası / Yeşil Kart:</td>
+                            <td colspan="3">${arac.sigorta.sirket} | Bitiş Tarihi: ${arac.sigorta.bitis} (${arac.sigorta.durum})</td>
+                        </tr>
+                        <tr>
+                            <td class="alan-adi" style="color:#c00000;">Tahkikat & Şerh Notu:</td>
+                            <td colspan="3" style="color:#b10000; font-weight:bold;">${arac.hukuki.not}</td>
+                        </tr>
+                    </table>
+
+                    <div class="arac-aksiyon-bar">
+                        <button class="aksiyon-btn" style="background-color:#e00000;" onclick="aracaCezaBagla('${secilenUlkeKodu} ${hamPlaka || arac.sasi}')">🚨 BU ARACA CEZA DÜZENLE</button>
+                        <button class="aksiyon-btn" style="background-color:#1d3898;" onclick="alert('${secilenUlkeKodu} ${hamPlaka || arac.sasi} plakalı araç için çekici ve men talebi onaylandı.')">🚜 ÇEKİCİ / TRAFİKTEN MEN TALEBİ</button>
+                        <button class="aksiyon-btn" style="background-color:#555;" onclick="alert('Aracın Interpol ve gümrük tahkikat kayıtları devriye birimine iletildi.')">📡 INTERPOL / GÜMRÜK SORGULA</button>
+                    </div>
+                </div>
+            `;
+        }
+
+// YENİ EKLEYECEĞİN FONKSİYON TAM OLARAK BURADAN BAŞLAYACAK:
+        function sorgulaPlakaDisaridan() {
+            const inputEl = document.getElementById('sorgu-plaka-input');
+            const sonucAlani = document.getElementById('arac-alt-sonuc');
+            if (!inputEl || !sonucAlani) return;
+
+            let plaka = inputEl.value.trim().toUpperCase().replace(/\s+/g, '');
+            if (!plaka) {
+                alert("Lütfen bir plaka giriniz.");
+                return;
+            }
+
+            let arac = polnetAraclar[plaka];
+
+            if (!arac) {
+                sonucAlani.innerHTML = `<div style="background:#fff; color:#c00000; padding:15px; border-radius:6px; margin-top:10px; font-weight:bold;">Sistemde "${plaka}" plakasına ait kayıt bulunamadı.</div>`;
+                return;
+            }
+
+            sonucAlani.innerHTML = `
+                <div class="arac-karti" style="margin-top: 15px; background: #fff; padding: 15px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                    <div class="arac-karti-ust" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 12px;">
+                        <div style="display:inline-flex; align-items:center; border:2px solid #111; border-radius:4px; font-weight:800; font-size:17px; background:#fff; color:#111; overflow:hidden;">
+                            <span style="background:#003399; color:#fff; font-size:12px; padding:4px 7px;">TR</span>
+                            <span style="padding:4px 12px; font-family:monospace;">${plaka}</span>
+                        </div>
+                        <span class="rozet-yesil" style="background: #008000; color: #fff; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 12px;">TRAFİĞE UYGUN</span>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13.5px;">
+                        <div style="display: flex; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                            <span style="width: 35%; font-weight: bold; color: #333;">Marka / Model :</span>
+                            <span style="width: 65%; color: #111;"><strong>${arac.marka}</strong> - ${arac.model} (${arac.yil})</span>
+                        </div>
+                        <div style="display: flex; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                            <span style="width: 35%; font-weight: bold; color: #333;">Ruhsat Sahibi :</span>
+                            <span style="width: 65%; color: #111;"><strong>${arac.sahip}</strong></span>
+                        </div>
+                        <div style="display: flex; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                            <span style="width: 35%; font-weight: bold; color: #333;">Şasi Numarası :</span>
+                            <span style="width: 65%; font-family: monospace; color: #111;">${arac.sasi}</span>
+                        </div>
+                        <div style="display: flex; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                            <span style="width: 35%; font-weight: bold; color: #333;">Muayene Durumu :</span>
+                            <span style="width: 65%; color: #111;">${arac.muayene.bitis} (${arac.muayene.durum})</span>
+                        </div>
+                        <div style="display: flex; padding-top: 2px;">
+                            <span style="width: 35%; font-weight: bold; color: #333;">Sigorta / Şerh :</span>
+                            <span style="width: 65%; color: #b10000; font-weight: bold;">${arac.hukuki.not}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function aracaCezaBagla(plakaMetni) {
+            const btnCeza = document.getElementById('btn-ceza');
+            butonSeciminiGuncelle(btnCeza);
+            cezaPaneliniYukle(plakaMetni);
+        }
+
+        function cezaKes() {
+            const shs = document.getElementById('ceza-sahis').value.trim().toUpperCase() || "34 PLK 34";
+            const val = document.getElementById('ceza-sebep').value;
+            const [g, idx] = val.split("___");
+            const mad = cezaVeritabani[g][parseInt(idx)];
+            const seri = "TR-" + Math.floor(100000 + Math.random() * 900000);
+            const tutarStr = mad.tutar > 0 ? mad.tutar.toLocaleString('tr-TR') + " TL" : "ADLİ SEVK (Mahkemece Takdir Edilecek)";
+
+            sonKesilenCeza = { 
+                sahis: shs, 
+                madde: mad.metin, 
+                tutar: tutarStr, 
+                adli: mad.adli, 
+                puan: mad.puan, 
+                seriNo: seri, 
+                tarihSaat: `${document.getElementById('saat-kutusu').innerText} - 20.09.2026` 
+            };
+
+            document.getElementById('panel-sonuc').innerHTML = `
+                <div class="sonuc-kutusu" style="border-left: 5px solid #e00000; margin-top: 15px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ddd; padding-bottom:8px; margin-bottom:10px;">
+                        <span style="color:#e00000; font-weight:bold; font-size:14px;">TRAFİK İDARİ PARA CEZASI / ADLİ İŞLEM TUTANAĞI</span>
+                        <span style="font-family:monospace; font-weight:bold; color:#333;">Seri No: ${seri}</span>
+                    </div>
+                    
+                    <p style="margin-bottom:6px;"><strong>Kişi TC / Araç Plakası:</strong> ${shs}</p>
+                    <p style="margin-bottom:6px;"><strong>Uygulanan Madde:</strong> ${mad.metin}</p>
+                    <p style="margin-bottom:6px;"><strong>Uygulanan Ceza Puanı:</strong> ${mad.puan} Puan</p>
+                    <p style="margin-bottom:6px;"><strong>Toplam Ceza Tutarı:</strong> <span style="color:#b10000; font-weight:bold;">${tutarStr}</span></p>
+                    <p style="margin-bottom:6px;"><strong>Yasal Hüküm / Yaptırım:</strong> ${mad.adli}</p>
+                    <p style="margin-bottom:14px;"><strong>Düzenlenme Zamanı:</strong> 20.09.2026 - ${document.getElementById('saat-kutusu').innerText}</p>
+
+                    <!-- BÜYÜK, SİMGESİZ VE TAMAMEN POLNET LACİVERTİ BUTONLAR -->
+                    <div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
+                        <button class="gri-btn" style="background: #1d3898; flex: 1; height: 52px; font-size: 14px; font-weight: bold; border-radius: 4px;" onclick="pdfGoster()">Ceza Makbuzunu Görüntüle</button>
+                        <button class="gri-btn" style="background: #1d3898; flex: 1; height: 52px; font-size: 14px; font-weight: bold; border-radius: 4px;" onclick="window.print()">Ceza Makbuzunu Yazdır</button>
+                        <button class="gri-btn" style="background: #1d3898; flex: 1; height: 52px; font-size: 14px; font-weight: bold; border-radius: 4px;" onclick="alert('Ceza tutanağı Pol-Net sistemine başarıyla onaylanarak kaydedildi.')">Kaydet</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function pdfGoster() {
+            if (!sonKesilenCeza) return;
+
+            const icerik = document.getElementById('pdfIcerikYazdir');
+            icerik.innerHTML = `
+                <div class="pdf-antet">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div class="barkod-alani">||| | |||| || ||| |||||</div>
+                        <div>
+                            <h3>T.C. İÇİŞLERİ BAKANLIĞI</h3>
+                            <h4>EMNİYET GENEL MÜDÜRLÜĞÜ</h4>
+                            <h4>TRAFİK BAŞKANLIĞI / DEVRİYE ŞUBE MÜDÜRLÜĞÜ</h4>
+                        </div>
+                        <div style="font-size:11px; text-align:right;">
+                            <strong>BELGE NO:</strong> ${sonKesilenCeza.seriNo}<br>
+                            <strong>KOD:</strong> 34-TRF-08
+                        </div>
+                    </div>
+                    <h2>TRAFİK İDARİ PARA CEZASI KARAR TUTANAĞI</h2>
+                </div>
+
+                <table class="pdf-tablo">
+                    <tr>
+                        <th>MUHATAP (TC / PLAKA)</th>
+                        <td><strong>${sonKesilenCeza.sahis}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>İHLAL EDİLEN KANUN MADDESİ</th>
+                        <td>${sonKesilenMaddeMetniTemizle(sonKesilenCeza.madde)}</td>
+                    </tr>
+                    <tr>
+                        <th>CEZA TUTARI (TL)</th>
+                        <td><span style="font-size:15px; font-weight:bold;">${sonKesilenCeza.tutar}</span> &nbsp; ${sonKesilenCeza.indirim}</td>
+                    </tr>
+                    <tr>
+                        <th>CEZA PUANI</th>
+                        <td><strong>${sonKesilenCeza.puan}</strong> CEZA PUANI</td>
+                    </tr>
+                    <tr>
+                        <th>YASAL YAPTIRIM / SEVK</th>
+                        <td>${sonKesilenCeza.adli}</td>
+                    </tr>
+                    <tr>
+                        <th>TANZİM TARİHİ VE SAATİ</th>
+                        <td>${sonKesilenCeza.tarihSaat}</td>
+                    </tr>
+                    <tr>
+                        <th>DÜZENLEYEN BİRİM / EKİP</th>
+                        <td>34-A POLİS EKİBİ / MOBİL TABLET TERMİNALİ</td>
+                    </tr>
+                </table>
+
+                <div style="font-size:11.5px; color:#333; text-align:justify; margin-top:8px; line-height:1.4;">
+                    <strong>YASAL UYARI VE TEBLİĞ ŞERHİ:</strong> İşbu tutanak 5326 sayılı Kabahatler Kanunu ve 2918 sayılı Karayolları Trafik Kanunu uyarınca düzenlenmiştir. Tebliğ tarihinden itibaren bir ay içinde ödenmesi halinde cezadan %25 indirim uygulanır. Tutanak aleyhine tebliğ tarihinden itibaren 15 gün içinde Sulh Ceza Hakimliğine itiraz hakkı saklıdır.
+                </div>
+
+                <div class="pdf-alt-bilgi">
+                    <div class="muhur-alani">
+                        T.C.<br>
+                        EMNİYET GENEL<br>
+                        MÜDÜRLÜĞÜ<br>
+                        ★ RESMİ ONAY ★
+                    </div>
+                    <div class="imza-alani">
+                        <strong>DÜZENLEYEN GÖREVLİ</strong><br>
+                        Sicil No: 652876<br>
+                        İmza / E-İmza:<br>
+                        <em>[Elektronik Olarak İmzalanmıştır]</em>
+                    </div>
+                    <div class="imza-alani">
+                        <strong>TEBELLÜĞ EDEN</strong><br>
+                        Adı Soyadı / Sürücü<br>
+                        İmza: .................................
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('pdfModal').style.display = 'flex';
+        }
+
+        function sonKesilenMaddeMetniTemizle(metin) {
+            return metin.replace(/---/g, '');
+        }
+
+        function pdfKapat() {
+            document.getElementById('pdfModal').style.display = 'none';
+        }
+    </script>
+</body>
+
+<!-- 2. EGM TABLET UYGULAMA SEÇİM MENÜSÜ (UTP & MODÜL LİSTESİ) -->
+    <div class="tablet-menu-ekran" id="tabletMenuEkrani">
+        <div class="android-bar">
+            <div class="saat" id="saat-kutusu-2">14:32</div>
+            <div class="tarih">Çarşamba, 2 Eylül</div>
+            <div class="durum">
+                <span>▴</span>
+                <span>⌁</span>
+                <span>▮</span>
+                <div class="batarya">87%</div>
+            </div>
+        </div>
+
+        <div class="ust-bar">
+            <<div class="amblem">
+    <img src="solustlogo.png" alt="EGM Amblemi" style="width:100%; height:100%; object-fit:contain;">
+</div>
+            <div class="ev" onclick="oturumuKapatMenu()" title="Oturumu Kapat" style="font-size:18px; color:#fff; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                <span>🔒 Çıkış</span>
+            </div>	
+        </div>
+
+        <div class="menu-icerik-govde">
+            <div style="margin-bottom: 4px;">
+                <h2 style="font-size: 26px; color: #111; font-weight: 800;">UYGULAMA LİSTESİ</h2>
+                <span style="font-size: 13.5px; color: #555;">Devriye ve denetim modüllerini seçmek için tıklayın.</span>
+            </div>
+
+            <!-- Trafik Modülü (Ana Polnet Paneline Geçer) -->
+            <div class="egm-liste-karti cizgi-mavi" onclick="polnetPanelineGec()">
+                <div class="kart-ikon-kutu" style="width:40px;height:40px;background:#f1f5f9;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;">🚔</div>
+                <div class="kart-yazi-alani" style="display:flex;flex-direction:column;gap:2px;">
+                    <div class="kart-ana-baslik" style="font-size:15px;font-weight:bold;color:#111;">Trafik</div>
+                    <div class="kart-alt-aciklama" style="font-size:12px;color:#555;">Trafik Denetim İşlemleri, GBT ve Ceza Yönetimi</div>
+                </div>
+            </div>
+
+            <!-- UTP (Uygulama Takip Projesi) Modülü -->
+            <div class="egm-liste-karti cizgi-yesil" onclick="utpPanelineGec()">
+                <div class="kart-ikon-kutu" style="width:40px;height:40px;background:#f1f5f9;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;">📋</div>
+                <div class="kart-yazi-alani" style="display:flex;flex-direction:column;gap:2px;">
+                    <div class="kart-ana-baslik" style="font-size:15px;font-weight:bold;color:#111;">UTP</div>
+                    <div class="kart-alt-aciklama" style="font-size:12px;color:#555;">Uygulama Takip Projesi & İhlal Bildirim Akışı</div>
+                </div>
+            </div>
+
+            <div class="egm-liste-karti cizgi-sari" onclick="alert('TKİBS modülü kurumsal iletişim ve duyurulara erişir.')">
+                <div class="kart-ikon-kutu" style="width:40px;height:40px;background:#f1f5f9;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;">🛡️</div>
+                <div class="kart-yazi-alani" style="display:flex;flex-direction:column;gap:2px;">
+                    <div class="kart-ana-baslik" style="font-size:15px;font-weight:bold;color:#111;">TKİBS</div>
+                    <div class="kart-alt-aciklama" style="font-size:12px;color:#555;">İhlal Bildirim ve Telsiz Anons Arşivi</div>
+                </div>
+            </div>
+
+            <div class="egm-liste-karti cizgi-mor" onclick="alert('Personel Anket Sistemi formları yükleniyor.')">
+                <div class="kart-ikon-kutu" style="width:40px;height:40px;background:#f1f5f9;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;">📊</div>
+                <div class="kart-yazi-alani" style="display:flex;flex-direction:column;gap:2px;">
+                    <div class="kart-ana-baslik" style="font-size:15px;font-weight:bold;color:#111;">Personel Anket Sistemi</div>
+                    <div class="kart-alt-aciklama" style="font-size:12px;color:#555;">Personel Değerlendirme ve Bildirim Formları</div>
+                </div>
+            </div>
+
+            <div class="egm-liste-karti cizgi-mor" onclick="alert('İstatistikleriniz: 14 GBT, 6 Plaka Sorgusu, 2 Ceza İşlemi.')">
+                <div class="kart-ikon-kutu" style="width:40px;height:40px;background:#f1f5f9;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;">📈</div>
+                <div class="kart-yazi-alani" style="display:flex;flex-direction:column;gap:2px;">
+                    <div class="kart-ana-baslik" style="font-size:15px;font-weight:bold;color:#111;">İstatistiklerim</div>
+                    <div class="kart-alt-aciklama" style="font-size:12px;color:#555;">Yapılan İstatistikleri Görüntüle ve Raporlar</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- 1. GİRİŞ EKRANI -->
+    <div class="giris-arkaplan" id="girisEkrani">
+        <div class="giris-kutu-portal">
+            <div class="giris-logo-alan">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Logo_of_General_Directorate_of_Security_%28Turkey%29.svg?utm_source=tr.wikipedia.org&utm_campaign=index&utm_content=original" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+</div>
+            
+            <div class="giris-portal-baslik">
+    EMNİYET GENEL MÜDÜRLÜĞÜ <br> ÖZEL GÜVENLİK BİLGİ SİSTEMİ
+</div>
+
+            <div class="portal-hata" id="girisHataMesaji"></div>
+
+            <div class="portal-form-grup">
+                <label style="color: #2ecc71;">TC Kimlik No/Sicil</label>
+                <input type="text" id="girisSicil" class="portal-input" value="" placeholder="">
+            </div>
+
+            <div class="portal-form-grup">
+                <label style="color: #2ecc71;">Password</label>
+                <input type="password" id="girisParola" class="portal-input" value="" placeholder="">
+            </div>
+
+            <div class="portal-sifre-satiri">
+                <label style="color: #2ecc71;">Parolamı Unuttum</label>
+            </div>
+
+            <button class="portal-logon-btn" onclick="sistemeGirisYap()">Logon</button>
+
+            <div class="portal-alt-bilgi">
+                Kurulum kılavuzunu indirmek için <a href="https://ozelguvenlik.egm.gov.tr/kullanim_kilavuzu.pdf" target="_blank">buraya</a> tıklayınız.
+            </div>
+
+            <div class="portal-telif">
+                Tüm Hakları Saklıdır 2022<br>
+                Emniyet Genel Müdürlüğü
+            </div>
+        </div>
+    </div>
+
+</html>
